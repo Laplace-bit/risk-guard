@@ -30,6 +30,6 @@ To pin a specific version:
 
 ```json
 {
-  "plugin": ["risk-guard@git+https://github.com/Laplace-bit/risk-guard.git#v1.0.0"]
+  "plugin": ["risk-guard@git+https://github.com/Laplace-bit/risk-guard.git#v1.2.0"]
 }
 ```
