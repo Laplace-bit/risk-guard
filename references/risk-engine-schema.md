@@ -70,6 +70,14 @@ Use this schema when calling `python scripts/risk_engine.py --input case.json`.
 | dead_phone_risk | 2 | Risk of phone running out |
 | dependent_involved | 5 | Vulnerable dependent is involved |
 
+### Transport Tags
+| Tag | Weight | Description |
+|-----|--------|-------------|
+| driver_fatigue | 4 | Driver is tired, sleepy, or not well-rested |
+| poor_vehicle_condition | 4 | Vehicle has known issues or hasn't been serviced |
+| bad_weather_route | 3 | Rain, snow, fog, or extreme weather along the route |
+| unfamiliar_route | 2 | Driver has not driven this route before |
+
 ### Safeguard Tags (negative weights reduce risk)
 | Tag | Weight | Description |
 |-----|--------|-------------|

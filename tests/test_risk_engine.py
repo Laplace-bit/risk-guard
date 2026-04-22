@@ -109,9 +109,45 @@ def test_empty_case():
     assert result["level"] == "green"
 
 
+def test_driver_fatigue_compound():
+    """Driver fatigue + bad weather should trigger compound rule."""
+    result = run_engine({
+        "scenario_tags": ["travel_and_mobility"],
+        "vulnerability_tags": [],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": ["no_fallback_transport"],
+    })
+    # Add transport tags
+    case_with_transport = {
+        "scenario_tags": ["travel_and_mobility"],
+        "vulnerability_tags": ["fatigue"],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": ["no_fallback_transport"],
+        "transport_tags": ["driver_fatigue", "bad_weather_route"],
+    }
+    # Manually add transport tags to exposure for the engine
+    case_combined = {
+        "scenario_tags": ["travel_and_mobility"],
+        "vulnerability_tags": ["fatigue"],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": ["no_fallback_transport", "driver_fatigue", "bad_weather_route"],
+    }
+    result = run_engine(case_combined)
+    assert result["level"] in ("orange", "red"), f"Expected orange/red, got {result['level']}"
+    assert any("fatigued driver" in r.lower() or "adverse road" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected driver fatigue compound rule, got: {result['triggered_rules']}"
+
+
 if __name__ == "__main__":
     tests = [test_green_low_risk, test_red_high_risk, test_orange_compound_risk,
-             test_safeguards_reduce_score, test_yellow_moderate_risk, test_empty_case]
+             test_safeguards_reduce_score, test_yellow_moderate_risk, test_empty_case,
+             test_driver_fatigue_compound]
     for t in tests:
         t()
         print(f"✓ {t.__name__}")

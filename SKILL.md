@@ -15,10 +15,11 @@ Treat the task as low-frequency high-severity risk auditing, not fortune telling
 ## Workflow
 
 1. **Classify** the user's planned action into one or more scenario groups.
-2. **Ask** only the highest-value missing questions (max 4 in the first round).
-3. **Model** vulnerability, exposure, friction, safeguards, reversibility, and uncertainty.
-4. **Run the risk engine** when structured inputs are available or when the case is complex.
-5. **Produce** a short decision-oriented output with missing facts, main risks, worst credible outcomes, and concrete next steps.
+2. **Gather** verifiable facts independently (weather, route conditions, venue safety, news) — don't ask the user what you can find yourself.
+3. **Ask** only the highest-value missing questions (max 4 in the first round) — questions that could change the recommendation and can't be answered by search.
+4. **Model** vulnerability, exposure, friction, safeguards, reversibility, and uncertainty.
+5. **Run the risk engine** when structured inputs are available or when the case is complex.
+6. **Produce** a short decision-oriented output with missing facts, main risks, worst credible outcomes, and concrete next steps.
 
 ## Core Operating Rules
 
@@ -50,6 +51,18 @@ Map the user input to one or more scenario groups. Consult `references/scenario-
 
 If the user message is broad (e.g., "I need to travel tomorrow" or "I'm going to meet someone"), ask a small batch of targeted questions before giving any judgment.
 
+## Active Information Gathering
+
+**Do not just ask the user — verify what you can independently.**
+
+When the user shares verifiable facts (destination, dates, route, venue), use web search, weather APIs, or any available tools to gather:
+
+- **Weather and road conditions** for the travel date and route
+- **Destination risk profile** — news about incidents, safety advisories, hazard reports for the specific location
+- **Venue information** — if it's a factory/site, any public safety records or news
+
+If you can find the answer by searching, don't waste the user's question quota on it. Instead, report what you found and ask only what you couldn't verify.
+
 ## Question Strategy
 
 Consult `references/question-bank.md`.
@@ -64,6 +77,7 @@ Choose questions from these dimensions:
 | **Activity load** | Duration, walking, lifting, standing, night hours, alcohol, cash carried |
 | **Counterpart risk** | Stranger identity, verification, pressure, incentives, coercion, urgency |
 | **Support and recovery** | Companion, emergency contact, transport fallback, medical access, ability to leave |
+| **Transport detail** | Driver status, vehicle condition, route familiarity, weather along route, backup transport |
 
 Do not ask generic filler questions.
 Only ask questions that could change the recommendation.
@@ -77,7 +91,8 @@ Use this mental model every time:
 | **Vulnerability** | How fragile is the user or any dependent person in this scenario? |
 | **Exposure** | What harmful source could reach them? |
 | **Friction** | What increases duration, load, or difficulty of escaping the situation? |
-| **Safeguards** | What controls are already in place? |
+| **Support and recovery** | What controls and fallbacks exist? Who can help? |
+| **Transport detail** | Who is driving, what condition is the vehicle, what's the route and weather? |
 | **Reversibility** | How bad is the outcome if the event happens? |
 | **Uncertainty** | How much critical information is still missing? |
 

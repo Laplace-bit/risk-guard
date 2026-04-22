@@ -2,18 +2,29 @@
 
 Ask only what could change the recommendation.
 Start with the smallest useful set.
+If the answer can be found by searching, do that instead of asking the user.
 
 ## Universal High-Yield Questions
 
 1. What exactly are you planning to do, where, and for how long?
 2. Will you be alone, and can you leave independently at any point?
 3. Do you have any health, pregnancy, recovery, fatigue, or medication factors that make this less routine for you?
-4. What is the hardest thing to reverse if this goes badly: injury, health harm, money loss, document exposure, or being stranded?
 
 ## Travel and mobility
 - What time of day is the travel, and what is your fallback if the first plan fails?
-- Are you carrying valuables, sensitive documents, or anything hard to replace?
 - Is the area familiar and well-served, or isolated with weak transport options?
+- Are you carrying valuables, sensitive documents, or anything hard to replace?
+
+### Transport detail (when riding with someone else)
+- How well do you know the driver? Are they rested, sober, and experienced with this route?
+- Is the vehicle in good condition? (tires, brakes, recent service)
+- What's the weather and road condition along the route? *(Search this if possible — don't ask if you can find it online)*
+- Do you have a backup way to get home if the driver can't or won't take you?
+
+### Transport detail (when driving yourself)
+- Are you well-rested and alert? Have you driven this route before?
+- What's the weather and road condition along the route? *(Search this)*
+- Do you have a passenger who can take over if you get tired?
 
 ## Workplace or site visit
 - What hazards could be present: chemicals, fumes, dust, heat, noise, radiation, infection, heights?
@@ -48,6 +59,15 @@ Start with the smallest useful set.
 - Is there a backup person and emergency contact path?
 
 ## Outdoor exposure
-- What are the temperature, weather, route difficulty, and return time?
+- What are the temperature, weather, route difficulty, and return time? *(Search weather forecast — don't ask if you can find it online)*
 - What is your water, shade, signal, and rescue plan?
 - Are you solo or with someone who can realistically help?
+
+## Active search checklist
+
+Before asking the user, try to verify these by search:
+- [ ] Weather forecast for the destination and route
+- [ ] Road conditions or travel advisories
+- [ ] Venue safety records or recent incidents (for factories, plants, outdoor areas)
+- [ ] Local emergency numbers and hospital proximity
+- [ ] Any recent safety news about the destination

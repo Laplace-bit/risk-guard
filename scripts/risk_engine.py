@@ -58,6 +58,11 @@ WEIGHTS: Dict[str, int] = {
     "no_fallback_transport": 3,
     "dead_phone_risk": 2,
     "dependent_involved": 5,
+    # transport
+    "driver_fatigue": 4,
+    "poor_vehicle_condition": 4,
+    "bad_weather_route": 3,
+    "unfamiliar_route": 2,
     # safeguards (negative)
     "public_place": -2,
     "trusted_companion": -3,
@@ -87,6 +92,10 @@ COMPOUND_RULES = [
      "dependent safety relies on weak recovery options"),
     ({"chemical", "dust", "radiation", "heat"}, {"confirmed_ppe"}, 4,
      "hazardous site conditions with unconfirmed controls"),
+    ({"driver_fatigue"}, {"bad_weather_route", "unfamiliar_route"}, 5,
+     "fatigued driver combined with adverse road conditions"),
+    ({"driver_fatigue", "poor_vehicle_condition"}, {"night_travel", "bad_weather_route"}, 6,
+     "vehicle or driver issues compounded by difficult travel conditions"),
 ]
 
 # ──────────────────────────────────────────────────────────────
