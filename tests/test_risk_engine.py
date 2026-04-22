@@ -117,7 +117,7 @@ def test_driver_fatigue_compound():
         "exposure_tags": [],
         "counterparty_tags": [],
         "safeguard_tags": [],
-        "constraint_tags": ["no_fallback_transport"],
+        "constraint_tags": [],
     })
     # Add transport tags
     case_with_transport = {
@@ -144,10 +144,84 @@ def test_driver_fatigue_compound():
         f"Expected driver fatigue compound rule, got: {result['triggered_rules']}"
 
 
+def test_digital_fraud_unsolicited_credential():
+    """unsolicited_contact + credential_request without verified_organization should be high risk."""
+    result = run_engine({
+        "scenario_tags": ["transaction_payment_or_asset_transfer"],
+        "vulnerability_tags": [],
+        "exposure_tags": ["non_reversible_payment"],
+        "counterparty_tags": ["unsolicited_contact", "credential_request"],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    # unsolicited_contact(4) + credential_request(5) + non_reversible_payment(6) = 15
+    # plus compound rule (+8) = 23 → red
+    assert result["level"] in ("orange", "red"), f"Expected orange/red, got {result['level']} (score {result['score']})"
+    assert any("unsolicited contact" in r.lower() and "credential" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected unsolicited contact + credential compound rule, got: {result['triggered_rules']}"
+    # Verify that adding verified_organization reduces the score
+    result_with_org = run_engine({
+        "scenario_tags": ["transaction_payment_or_asset_transfer"],
+        "vulnerability_tags": [],
+        "exposure_tags": ["non_reversible_payment"],
+        "counterparty_tags": ["unsolicited_contact", "credential_request"],
+        "safeguard_tags": ["verified_organization"],
+        "constraint_tags": [],
+    })
+    assert result_with_org["score"] < result["score"], \
+        f"verified_organization should reduce score: {result_with_org['score']} >= {result['score']}"
+
+
+def test_digital_fraud_unsolicited_threat():
+    """unsolicited_contact + threat_or_ultimatum without verified_organization should be high risk."""
+    result = run_engine({
+        "scenario_tags": ["transaction_payment_or_asset_transfer"],
+        "vulnerability_tags": [],
+        "exposure_tags": ["non_reversible_payment"],
+        "counterparty_tags": ["unsolicited_contact", "threat_or_ultimatum", "suspicious_payment_method"],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    # unsolicited_contact(4) + threat_or_ultimatum(5) + non_reversible_payment(6) + suspicious_payment_method(4) = 19
+    # plus compound rules: unsolicited_contact+suspicious_payment_method(+8), threat_or_ultimatum+suspicious_payment_method(+7) = 34 → red
+    assert result["level"] == "red", f"Expected red, got {result['level']} (score {result['score']})"
+    assert len(result["triggered_rules"]) >= 2, \
+        f"Expected at least 2 compound rules, got: {result['triggered_rules']}"
+    # Verify that adding verified_organization reduces the score
+    result_with_org = run_engine({
+        "scenario_tags": ["transaction_payment_or_asset_transfer"],
+        "vulnerability_tags": [],
+        "exposure_tags": ["non_reversible_payment"],
+        "counterparty_tags": ["unsolicited_contact", "threat_or_ultimatum", "suspicious_payment_method"],
+        "safeguard_tags": ["verified_organization"],
+        "constraint_tags": [],
+    })
+    assert result_with_org["score"] < result["score"], \
+        f"verified_organization should reduce score: {result_with_org['score']} >= {result['score']}"
+
+
+def test_business_trip_with_transport():
+    """Business trip with transport tags should trigger driver fatigue compound."""
+    result = run_engine({
+        "scenario_tags": ["travel_and_mobility", "workplace_or_site_visit"],
+        "vulnerability_tags": [],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": ["driver_fatigue", "bad_weather_route", "no_fallback_transport"],
+    })
+    # driver_fatigue(4) + bad_weather_route(3) + no_fallback_transport(3) = 10
+    # compound: driver_fatigue + bad_weather_route (+5) = 15 → orange
+    assert result["level"] in ("orange", "red"), f"Expected orange/red, got {result['level']} (score {result['score']})"
+    assert any("fatigued driver" in r.lower() or "adverse road" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected driver fatigue compound rule, got: {result['triggered_rules']}"
+
+
 if __name__ == "__main__":
     tests = [test_green_low_risk, test_red_high_risk, test_orange_compound_risk,
              test_safeguards_reduce_score, test_yellow_moderate_risk, test_empty_case,
-             test_driver_fatigue_compound]
+             test_driver_fatigue_compound, test_digital_fraud_unsolicited_credential,
+             test_digital_fraud_unsolicited_threat, test_business_trip_with_transport]
     for t in tests:
         t()
         print(f"✓ {t.__name__}")

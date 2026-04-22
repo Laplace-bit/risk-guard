@@ -71,3 +71,17 @@ Triggers:
 
 High-signal factors:
 - Identity gaps, story inconsistency, urgency, private venue, requests for upfront money or documents
+
+## 11. Business trip or multi-day travel
+Triggers:
+- Work trips, conferences, client visits, multi-day travel to another city, staying at hotels
+
+High-signal factors:
+- Unfamiliar city, long duration, fatigue from travel, carrying valuables or equipment, colleague dependency, time zone changes, jet lag, language barriers, visa or border issues, hotel security concerns
+
+## 12. Digital fraud, scam, or phishing risk
+Triggers:
+- Receiving suspicious links, unexpected payment requests, impersonation messages, "your account is locked" alerts, romance scams, investment pitches, tech support scams, crypto schemes
+
+High-signal factors:
+- Urgency or threats, requests for money or credentials, identity inconsistencies, pressure to act now, unusual payment methods, grammar errors combined with urgency, unsolicited contact, too-good-to-be-true returns

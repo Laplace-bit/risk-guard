@@ -78,6 +78,14 @@ Use this schema when calling `python scripts/risk_engine.py --input case.json`.
 | bad_weather_route | 3 | Rain, snow, fog, or extreme weather along the route |
 | unfamiliar_route | 2 | Driver has not driven this route before |
 
+### Digital Fraud Tags
+| Tag | Weight | Description |
+|-----|--------|-------------|
+| unsolicited_contact | 4 | Contact came to you, not initiated by you |
+| credential_request | 5 | Asking for passwords, codes, IDs, or account access |
+| threat_or_ultimatum | 5 | "Act now or lose access" / "Your account will be locked" |
+| suspicious_payment_method | 4 | Gift cards, crypto to unknown wallet, wire to unfamiliar account |
+
 ### Safeguard Tags (negative weights reduce risk)
 | Tag | Weight | Description |
 |-----|--------|-------------|
@@ -89,3 +97,6 @@ Use this schema when calling `python scripts/risk_engine.py --input case.json`.
 | can_exit_independently | -3 | User can leave at any time without dependency |
 | live_location_shared | -1 | Real-time location shared with trusted contact |
 | medical_support_nearby | -2 | Medical facility accessible nearby |
+| checked_weather | -2 | Weather and route conditions verified before travel |
+| travel_insurance | -2 | Travel or trip insurance in place |
+| verified_organization | -3 | Organization or venue independently verified as legitimate |

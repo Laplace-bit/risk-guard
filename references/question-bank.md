@@ -71,3 +71,17 @@ Before asking the user, try to verify these by search:
 - [ ] Venue safety records or recent incidents (for factories, plants, outdoor areas)
 - [ ] Local emergency numbers and hospital proximity
 - [ ] Any recent safety news about the destination
+
+## Business trip or multi-day travel
+- How long is the trip, and is it in an unfamiliar city or country?
+- Are you carrying valuable equipment, sensitive data, or large amounts of cash?
+- What's your accommodation security situation? (hotel rating, area safety, 24h desk)
+- Do you have a working phone, local SIM, or roaming plan for emergencies?
+- Are there language barriers, visa requirements, or border risks?
+
+## Digital fraud, scam, or phishing risk
+- Did you initiate this contact, or did it come to you unsolicited?
+- Are they asking for money, credentials, personal info, or urgent action?
+- Can you verify the person or organization through an independent channel?
+- Is there a time pressure or threat attached ("act now or lose access")?
+- Does the payment method allow reversal?

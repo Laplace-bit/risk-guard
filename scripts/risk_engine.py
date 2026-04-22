@@ -63,6 +63,11 @@ WEIGHTS: Dict[str, int] = {
     "poor_vehicle_condition": 4,
     "bad_weather_route": 3,
     "unfamiliar_route": 2,
+    # digital fraud
+    "unsolicited_contact": 4,
+    "credential_request": 5,
+    "threat_or_ultimatum": 5,
+    "suspicious_payment_method": 4,
     # safeguards (negative)
     "public_place": -2,
     "trusted_companion": -3,
@@ -72,6 +77,9 @@ WEIGHTS: Dict[str, int] = {
     "can_exit_independently": -3,
     "live_location_shared": -1,
     "medical_support_nearby": -2,
+    "checked_weather": -2,
+    "travel_insurance": -2,
+    "verified_organization": -3,
 }
 
 # ──────────────────────────────────────────────────────────────
@@ -96,6 +104,10 @@ COMPOUND_RULES = [
      "fatigued driver combined with adverse road conditions"),
     ({"driver_fatigue", "poor_vehicle_condition"}, {"night_travel", "bad_weather_route"}, 6,
      "vehicle or driver issues compounded by difficult travel conditions"),
+    ({"unsolicited_contact"}, {"credential_request", "non_reversible_payment", "suspicious_payment_method"}, 8,
+     "unsolicited contact requesting credentials or irreversible payment — classic scam pattern"),
+    ({"threat_or_ultimatum"}, {"urgency", "suspicious_payment_method"}, 7,
+     "threats or ultimatums combined with pressure to pay — high fraud risk"),
 ]
 
 # ──────────────────────────────────────────────────────────────
@@ -127,6 +139,7 @@ def normalize_case(data: Dict) -> Set[str]:
         "counterparty_tags",
         "safeguard_tags",
         "constraint_tags",
+        "transport_tags",
     ]:
         values = data.get(key, []) or []
         if not isinstance(values, list):

@@ -1,6 +1,6 @@
 ---
 name: risk-guard
-description: Analyze planned real-world actions for low-probability high-impact risks across personal safety, health, and financial safety. Use when a user says they are about to do something in real life and wants a risk check, safety advice, a go/no-go judgment, travel review, health-sensitive activity review, stranger meeting review, transaction review, or any precaution-focused assessment. Ask targeted follow-up questions, surface missing critical facts, model compound risk, and give concise practical recommendations.
+description: Analyze planned real-world actions for low-probability high-impact risks. ONLY use when the user explicitly asks for a risk assessment, safety check, or go/no-go judgment — or when they describe a situation that a reasonable person would want a safety review for (e.g., meeting a stranger alone at night, handling hazardous materials, sending money to an unverified party). Do NOT trigger for general advice, planning, recommendations, or casual conversation.
 ---
 
 # Risk Guard
@@ -10,7 +10,7 @@ description: Analyze planned real-world actions for low-probability high-impact 
 Use this skill to turn a vague planned action into a structured safety review.
 Treat the task as low-frequency high-severity risk auditing, not fortune telling.
 
-**Announce at start:** "I'm using the risk-guard skill to review this action for safety risks."
+**Announce at start (only if the user did not explicitly request a risk check):** "I'll review this for safety risks."
 
 ## Workflow
 
@@ -48,6 +48,8 @@ Map the user input to one or more scenario groups. Consult `references/scenario-
 | 8 | Outdoor or environmental exposure |
 | 9 | Nightlife or isolated-time movement |
 | 10 | Online-to-offline conversion |
+| 11 | Business trip or multi-day travel |
+| 12 | Digital fraud, scam, or phishing risk |
 
 If the user message is broad (e.g., "I need to travel tomorrow" or "I'm going to meet someone"), ask a small batch of targeted questions before giving any judgment.
 
@@ -129,6 +131,12 @@ Use the script especially when:
 
 Keep the answer concise and action-oriented. Use this exact structure unless the user asks for something else:
 
+### Situation summary
+One sentence confirming what the user is doing, where, when, and with whom. This lets the user verify you understood correctly before they read the judgment.
+
+### What I found automatically
+Brief list of facts you verified by search (weather, route conditions, venue info, local news). If nothing was searched, say "No independent search was performed for this case."
+
 ### Decision
 One line: green / yellow / orange / red, followed by the plain-language takeaway.
 
@@ -172,6 +180,20 @@ State high / medium / low with a one-line reason.
 - "A landlord wants a deposit before showing me the place"
 - "My parent with dementia wants to take a taxi alone to the hospital"
 - "I'm going hiking in extreme heat with limited water"
+- "Is it safe to do X?" or "Should I be worried about X?" or "Risk check on X"
+- "帮我看看这个事情安不安全" or "风险评估" or "安全审查"
+
+## Do NOT Trigger This Skill For
+
+- General travel planning ("帮我规划一下杭州三日游") — no safety concern expressed
+- Casual recommendations ("推荐个餐厅") — no risk context
+- Factual questions ("明天杭州天气怎么样") — user just wants info, not a risk judgment
+- General advice ("孕期能不能喝咖啡") — not a specific planned action with real-world stakes
+- Productivity or work tasks ("帮我写份报告") — no physical/financial safety dimension
+- Coding or technical questions — no real-world safety dimension
+- Emotional support or general conversation — not a safety review
+
+**Trigger heuristic:** Only activate when (a) the user explicitly asks for a risk/safety assessment, OR (b) a reasonable person in the same situation would proactively seek a safety review. When in doubt, don't trigger — false negatives are preferable to interrupting normal AI usage.
 
 ## Final Check Before Responding
 
