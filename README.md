@@ -16,41 +16,87 @@ It's built on a methodology from aviation and clinical risk assessment: **classi
 
 ## Installation
 
-### Claude Code
-```bash
-# Clone the repo
-git clone https://github.com/dzlin/risk-guard.git ~/.claude/risk-guard
+**Note:** Installation differs by platform.
 
-# Skills are auto-discovered from the skills/ directory
-# Restart Claude Code to activate
+### Claude Code
+
+In Claude Code, install the plugin:
+
+```bash
+/plugin install risk-guard@git+https://github.com/Laplace-bit/risk-guard.git
 ```
 
-### OpenAI Codex CLI
+Or clone manually:
 ```bash
-git clone https://github.com/dzlin/risk-guard.git ~/.codex/risk-guard
+git clone https://github.com/Laplace-bit/risk-guard.git ~/.claude/risk-guard
+```
+
+Restart Claude Code to activate.
+
+### OpenAI Codex CLI
+
+Open the plugin search interface:
+```bash
+/plugins
+```
+Search for `risk-guard`, then select **Install Plugin**.
+
+Or install manually:
+```bash
+git clone https://github.com/Laplace-bit/risk-guard.git ~/.codex/risk-guard
 mkdir -p ~/.agents/skills
 ln -s ~/.codex/risk-guard ~/.agents/skills/risk-guard
 ```
 Restart Codex. See [`.codex/INSTALL.md`](.codex/INSTALL.md) for details.
 
 ### OpenCode
+
 Add to your `opencode.json`:
 ```json
 {
-  "plugin": ["risk-guard@git+https://github.com/dzlin/risk-guard.git"]
+  "plugin": ["risk-guard@git+https://github.com/Laplace-bit/risk-guard.git"]
+}
+```
+Restart OpenCode — the plugin auto-installs.
+
+To pin a version:
+```json
+{
+  "plugin": ["risk-guard@git+https://github.com/Laplace-bit/risk-guard.git#v1.2.0"]
 }
 ```
 See [`.opencode/INSTALL.md`](.opencode/INSTALL.md) for details.
 
 ### Cursor
-Install from the plugin marketplace or copy the `.cursor-plugin/` directory.
-See the configuration in [`.cursor-plugin/plugin.json`](.cursor-plugin/plugin.json).
 
-### Gemini
-The `gemini-extension.json` and `GEMINI.md` provide context file support.
+In Cursor Agent chat:
+```text
+/add-plugin risk-guard
+```
+Or search for "risk-guard" in the plugin marketplace.
+
+### Gemini CLI
+
+```bash
+gemini extensions install https://github.com/Laplace-bit/risk-guard
+```
+
+To update:
+```bash
+gemini extensions update risk-guard
+```
 
 ### Hermes Agent
-Use directly — the `SKILL.md` is Hermes-compatible. Copy the skill directory to `~/.hermes/skills/risk-guard/`.
+
+Copy to the skills directory:
+```bash
+git clone https://github.com/Laplace-bit/risk-guard.git ~/.hermes/skills/risk-guard
+```
+Hermes auto-discovers skills from `~/.hermes/skills/`. Restart if needed.
+
+### Verify Installation
+
+Ask your agent: *"Tell me about your risk-guard skill"* — it should describe the safety review workflow.
 
 ## Risk Engine
 

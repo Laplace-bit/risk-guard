@@ -1,12 +1,12 @@
 {
   "name": "risk-guard",
   "description": "Analyze planned real-world actions for low-probability high-impact risks. Structured safety review with compound risk modeling, targeted questions, and go/no-go judgments.",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "author": {
     "name": "dzlin"
   },
-  "homepage": "https://github.com/dzlin/risk-guard",
-  "repository": "https://github.com/dzlin/risk-guard",
+  "homepage": "https://github.com/Laplace-bit/risk-guard",
+  "repository": "https://github.com/Laplace-bit/risk-guard",
   "license": "MIT",
   "keywords": [
     "risk",

@@ -10,7 +10,7 @@ Enable risk-guard skills in Codex via native skill discovery. Just clone and sym
 
 1. **Clone the risk-guard repository:**
    ```bash
-   git clone https://github.com/dzlin/risk-guard.git ~/.codex/risk-guard
+   git clone https://github.com/Laplace-bit/risk-guard.git ~/.codex/risk-guard
    ```
 
 2. **Create the skills symlink:**

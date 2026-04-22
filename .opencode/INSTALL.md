@@ -10,7 +10,7 @@ Add risk-guard to the `plugin` array in your `opencode.json` (global or project-
 
 ```json
 {
-  "plugin": ["risk-guard@git+https://github.com/dzlin/risk-guard.git"]
+  "plugin": ["risk-guard@git+https://github.com/Laplace-bit/risk-guard.git"]
 }
 ```
 
@@ -30,6 +30,6 @@ To pin a specific version:
 
 ```json
 {
-  "plugin": ["risk-guard@git+https://github.com/dzlin/risk-guard.git#v1.0.0"]
+  "plugin": ["risk-guard@git+https://github.com/Laplace-bit/risk-guard.git#v1.0.0"]
 }
 ```
