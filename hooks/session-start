@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Risk Guard session start hook
+echo "Risk Guard skill loaded. Use 'risk-guard check' or just describe your planned action for a safety review."

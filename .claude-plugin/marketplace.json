@@ -1,0 +1,18 @@
+{
+  "name": "risk-guard-dev",
+  "description": "Development marketplace for Risk Guard — safety review skill for AI agents",
+  "owner": {
+    "name": "dzlin"
+  },
+  "plugins": [
+    {
+      "name": "risk-guard",
+      "description": "Analyze planned real-world actions for low-probability high-impact risks. Structured safety review with compound risk modeling, targeted questions, and go/no-go judgments.",
+      "version": "1.0.0",
+      "source": "./",
+      "author": {
+        "name": "dzlin"
+      }
+    }
+  ]
+}

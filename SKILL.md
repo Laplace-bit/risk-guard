@@ -1,0 +1,169 @@
+---
+name: risk-guard
+description: Analyze planned real-world actions for low-probability high-impact risks across personal safety, health, and financial safety. Use when a user says they are about to do something in real life and wants a risk check, safety advice, a go/no-go judgment, travel review, health-sensitive activity review, stranger meeting review, transaction review, or any precaution-focused assessment. Ask targeted follow-up questions, surface missing critical facts, model compound risk, and give concise practical recommendations.
+---
+
+# Risk Guard
+
+## Overview
+
+Use this skill to turn a vague planned action into a structured safety review.
+Treat the task as low-frequency high-severity risk auditing, not fortune telling.
+
+**Announce at start:** "I'm using the risk-guard skill to review this action for safety risks."
+
+## Workflow
+
+1. **Classify** the user's planned action into one or more scenario groups.
+2. **Ask** only the highest-value missing questions (max 4 in the first round).
+3. **Model** vulnerability, exposure, friction, safeguards, reversibility, and uncertainty.
+4. **Run the risk engine** when structured inputs are available or when the case is complex.
+5. **Produce** a short decision-oriented output with missing facts, main risks, worst credible outcomes, and concrete next steps.
+
+## Core Operating Rules
+
+- Distinguish clearly between facts, inferences, and unknowns.
+- Prefer false positives over false negatives when the downside is irreversible or severe.
+- Raise the level when several moderate factors combine.
+- Treat the following as high-sensitivity modifiers: pregnancy, possible pregnancy, infancy, advanced age, disability, surgery recovery, chronic illness, severe fatigue, isolation, unfamiliar locations, hazardous workplaces, coercion, and urgent money movement.
+- Never say an outcome is certain unless the user already supplied a confirmed fact.
+- Never hide uncertainty. If key information is missing, say so explicitly and lower confidence.
+- Do not overwhelm the user with every possible danger. Prioritize the 3 to 5 most material risks.
+- Do not present risk reasoning as formal medical, legal, or engineering advice.
+
+## Classification Step
+
+Map the user input to one or more scenario groups. Consult `references/scenario-map.md` when the classification is unclear.
+
+| # | Scenario Group |
+|---|----------------|
+| 1 | Travel and mobility |
+| 2 | Workplace or site visit |
+| 3 | Health-sensitive activity |
+| 4 | Stranger interaction or relationship meeting |
+| 5 | Housing or property viewing |
+| 6 | Transaction, payment, or asset transfer |
+| 7 | Caregiving or dependent protection |
+| 8 | Outdoor or environmental exposure |
+| 9 | Nightlife or isolated-time movement |
+| 10 | Online-to-offline conversion |
+
+If the user message is broad (e.g., "I need to travel tomorrow" or "I'm going to meet someone"), ask a small batch of targeted questions before giving any judgment.
+
+## Question Strategy
+
+Consult `references/question-bank.md`.
+
+Ask at most 4 high-value questions in the first round unless the user already provided enough detail.
+Choose questions from these dimensions:
+
+| Dimension | Examples |
+|-----------|----------|
+| **Vulnerability** | Pregnancy, health status, age-related vulnerability, fatigue, medication, recent procedure |
+| **Environment** | Location type, hazard sources, crowding, isolation, weather, building conditions |
+| **Activity load** | Duration, walking, lifting, standing, night hours, alcohol, cash carried |
+| **Counterpart risk** | Stranger identity, verification, pressure, incentives, coercion, urgency |
+| **Support and recovery** | Companion, emergency contact, transport fallback, medical access, ability to leave |
+
+Do not ask generic filler questions.
+Only ask questions that could change the recommendation.
+
+## Risk Model
+
+Use this mental model every time:
+
+| Factor | Question |
+|--------|----------|
+| **Vulnerability** | How fragile is the user or any dependent person in this scenario? |
+| **Exposure** | What harmful source could reach them? |
+| **Friction** | What increases duration, load, or difficulty of escaping the situation? |
+| **Safeguards** | What controls are already in place? |
+| **Reversibility** | How bad is the outcome if the event happens? |
+| **Uncertainty** | How much critical information is still missing? |
+
+### Escalation Heuristics
+
+Escalate strongly when **any** of these are present:
+
+- Irreversible or severe health harm
+- Pregnancy or possible pregnancy + chemical, infectious, thermal, physical, or overexertion exposure
+- Minors, elders, or dependents exposed to unreliable care or transport
+- Late night isolation, unfamiliar area, poor exit options, or no trusted contact
+- Urgent transfer of money, deposits, gifts, crypto, or identity documents to strangers or weakly verified parties
+- User language minimizes risk: "probably fine", "just once", "should be okay", "I don't want to make trouble"
+- Several moderate factors stack together
+
+## Script Usage
+
+For complex or borderline cases, structure the facts and run:
+
+```bash
+python scripts/risk_engine.py --input case.json
+```
+
+The JSON schema is described in `references/risk-engine-schema.md`.
+
+Use the script especially when:
+
+- Multiple scenario groups apply
+- There are more than 6 meaningful factors
+- The user wants a consistent rating
+- You need to explain why a case was escalated
+
+## Output Format
+
+Keep the answer concise and action-oriented. Use this exact structure unless the user asks for something else:
+
+### Decision
+One line: green / yellow / orange / red, followed by the plain-language takeaway.
+
+### Why this is risky
+3 bullets maximum. Focus on compound risk, not a long list.
+
+### Missing critical facts
+List only the missing items that could change the recommendation.
+If there are none, say "none that materially change the judgment".
+
+### Best next actions
+Give 3 to 5 actions in priority order.
+
+### Worst credible outcomes
+Name the most material low-probability high-impact outcomes in plain language.
+
+### Confidence
+State high / medium / low with a one-line reason.
+
+## Output Style Rules
+
+- Prefer short direct sentences.
+- Lead with the judgment, not the background analysis.
+- Say "I would not do this as currently described" when the case is orange or red.
+- For green or yellow, still include safeguards.
+- Do not write like a legal disclaimer.
+
+## Domain References
+
+- `references/scenario-map.md`: scenario identification and typical factor patterns
+- `references/question-bank.md`: high-yield follow-up questions by scenario
+- `references/risk-taxonomy.md`: cross-domain risk categories, red flags, and compounding logic
+- `references/output-examples.md`: style and structure examples
+- `references/risk-engine-schema.md`: structured input for the risk engine
+
+## Example Requests That Should Trigger This Skill
+
+- "I'm six weeks pregnant and need to visit a chemical plant for work tomorrow"
+- "I'm meeting a stranger from the internet tonight at a bar near the highway"
+- "I need to travel alone at 2 am with expensive equipment"
+- "A landlord wants a deposit before showing me the place"
+- "My parent with dementia wants to take a taxi alone to the hospital"
+- "I'm going hiking in extreme heat with limited water"
+
+## Final Check Before Responding
+
+Before sending the answer, verify that you have:
+
+- [ ] Separated facts from unknowns
+- [ ] Considered compound risk rather than isolated risk
+- [ ] Considered the hardest-to-reverse outcomes
+- [ ] Given a practical next step
+- [ ] Kept the answer concise

@@ -1,0 +1,6 @@
+{
+  "name": "risk-guard",
+  "description": "Analyze planned real-world actions for low-probability high-impact risks. Structured safety review with compound risk modeling, targeted questions, and go/no-go judgments.",
+  "version": "1.0.0",
+  "contextFileName": "GEMINI.md"
+}
