@@ -292,6 +292,110 @@ def test_checklist_safeguard():
     assert score_safe < score_base, f"Checklist should reduce score: {score_safe} >= {score_base}"
 
 
+def test_travel_safeguards_reduce_score():
+    """checked_weather + travel_insurance should reduce risk score."""
+    base = {
+        "scenario_tags": ["travel_and_mobility"],
+        "vulnerability_tags": ["fatigue"],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+        "transport_tags": ["driver_fatigue", "bad_weather_route"],
+    }
+    with_safeguards = {
+        **base,
+        "safeguard_tags": ["checked_weather", "travel_insurance"],
+    }
+    score_base = run_engine(base)["score"]
+    score_safe = run_engine(with_safeguards)["score"]
+    assert score_safe < score_base, f"Travel safeguards should reduce score: {score_safe} >= {score_base}"
+
+
+def test_verified_identity_reversible_payment():
+    """verified_identity + reversible_payment should reduce fraud scenario score."""
+    base = {
+        "scenario_tags": ["transaction_payment_or_asset_transfer"],
+        "vulnerability_tags": [],
+        "exposure_tags": ["non_reversible_payment"],
+        "counterparty_tags": ["unsolicited_contact", "credential_request"],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    }
+    with_safeguards = {
+        **base,
+        "safeguard_tags": ["verified_identity", "reversible_payment", "verified_organization"],
+    }
+    score_base = run_engine(base)["score"]
+    score_safe = run_engine(with_safeguards)["score"]
+    assert score_safe < score_base, f"Identity/payment safeguards should reduce score: {score_safe} >= {score_base}"
+
+
+def test_ppe_and_medical_safeguard():
+    """confirmed_ppe + medical_support_nearby should reduce hazard scenario score."""
+    base = {
+        "scenario_tags": ["workplace_or_site_visit"],
+        "vulnerability_tags": [],
+        "exposure_tags": ["chemical", "dust", "heat"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": ["poor_medical_access"],
+    }
+    with_safeguards = {
+        **base,
+        "safeguard_tags": ["confirmed_ppe", "medical_support_nearby"],
+    }
+    score_base = run_engine(base)["score"]
+    score_safe = run_engine(with_safeguards)["score"]
+    assert score_safe < score_base, f"PPE/medical safeguards should reduce score: {score_safe} >= {score_base}"
+
+
+def test_deployment_safeguards_reduce_risk():
+    """feature_flags + gradual_rollout should reduce deployment risk."""
+    base = {
+        "scenario_tags": ["technical_deployment_or_system_change"],
+        "vulnerability_tags": [],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+        "anticipatory_tags": ["tight_coupling", "single_point_of_failure"],
+    }
+    with_safeguards = {
+        **base,
+        "safeguard_tags": ["feature_flags", "gradual_rollout"],
+        "anticipatory_safeguard_tags": ["rollback_tested", "buffer_time", "monitoring_configured"],
+    }
+    score_base = run_engine(base)["score"]
+    score_safe = run_engine(with_safeguards)["score"]
+    assert score_safe < score_base, f"Deployment safeguards should reduce score: {score_safe} >= {score_base}"
+
+
+def test_safeguards_dramatically_reduce_score():
+    """Multiple safeguards should dramatically reduce a severe case's score."""
+    high_risk = {
+        "scenario_tags": ["workplace_or_site_visit", "health_sensitive_activity"],
+        "vulnerability_tags": ["pregnancy"],
+        "exposure_tags": ["chemical", "heat", "long_walking"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": ["cannot_exit_freely", "poor_medical_access"],
+    }
+    mitigated = {
+        **high_risk,
+        "safeguard_tags": [
+            "confirmed_ppe", "medical_support_nearby", "can_exit_independently",
+            "checked_weather", "trusted_companion",
+        ],
+    }
+    score_high = run_engine(high_risk)["score"]
+    score_mitigated = run_engine(mitigated)["score"]
+    assert score_high > 18, f"High-risk case should be >18 (red), got {score_high}"
+    # Safeguards should reduce score by at least 10 points
+    reduction = score_high - score_mitigated
+    assert reduction >= 10, f"Safeguards should reduce score by >=10, got {reduction}"
+
+
 if __name__ == "__main__":
     tests = [test_green_low_risk, test_red_high_risk, test_orange_compound_risk,
              test_safeguards_reduce_score, test_yellow_moderate_risk, test_empty_case,
@@ -299,7 +403,10 @@ if __name__ == "__main__":
              test_digital_fraud_unsolicited_threat, test_business_trip_with_transport,
              test_one_way_door_compound, test_tight_coupling_spof_urgency,
              test_overconfidence_one_way_door, test_anticipatory_safeguards_reduce_score,
-             test_planning_fallacy_zero_slack, test_checklist_safeguard]
+             test_planning_fallacy_zero_slack, test_checklist_safeguard,
+             test_travel_safeguards_reduce_score, test_verified_identity_reversible_payment,
+             test_ppe_and_medical_safeguard, test_deployment_safeguards_reduce_risk,
+             test_safeguards_dramatically_reduce_score]
     for t in tests:
         t()
         print(f"✓ {t.__name__}")
