@@ -1,7 +1,7 @@
 {
   "name": "risk-guard",
   "description": "Help people think more thoroughly and avoid unexpected failures. Quick safety review for real-world actions + full 6-phase anticipatory thinking (checklists, inversion, pre-mortem, stress test, scenario planning, resilience).",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "type": "module",
   "author": {
     "name": "dzlin"

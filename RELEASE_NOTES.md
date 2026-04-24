@@ -1,6 +1,6 @@
 # Release Notes
 
-## v2.0.1 (2026-04-24)
+## v2.0.2 (2026-04-24)
 
 ### What's New
 - **Full Review 6-phase workflow** — Complete anticipatory thinking from checklists to resilience design

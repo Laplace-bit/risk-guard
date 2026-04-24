@@ -117,7 +117,7 @@ Add to your `opencode.json`:
 To pin a version:
 ```json
 {
-  "plugin": ["risk-guard@git+https://github.com/Laplace-bit/risk-guard.git#v2.0.1"]
+  "plugin": ["risk-guard@git+https://github.com/Laplace-bit/risk-guard.git#v2.0.2"]
 }
 ```
 See [`.opencode/INSTALL.md`](.opencode/INSTALL.md) for details.

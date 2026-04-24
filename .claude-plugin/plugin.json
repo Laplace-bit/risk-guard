@@ -1,7 +1,7 @@
 {
   "name": "risk-guard",
   "description": "Help people think more thoroughly and avoid unexpected failures. Two modes: Quick Review (safety check for travel/meetings/transactions) and Full 6-Phase Review (checklists, inversion, pre-mortem, stress test, scenario planning, resilience design).",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": {
     "name": "dzlin"
   },
