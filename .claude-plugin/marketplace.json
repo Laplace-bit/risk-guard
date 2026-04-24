@@ -6,8 +6,8 @@
   "plugins": [
     {
       "name": "risk-guard",
-      "description": "Analyze planned real-world actions for low-probability high-impact risks. Structured safety review with compound risk modeling, targeted questions, and go/no-go judgments.",
-      "version": "1.2.0",
+      "description": "Help people think more thoroughly and avoid unexpected failures. Two modes: Quick Review (safety check for travel/meetings/transactions) and Full 6-Phase Review (checklists, inversion, pre-mortem, stress test, scenario planning, resilience design).",
+      "version": "2.0.1",
       "source": "./",
       "author": {
         "name": "dzlin"

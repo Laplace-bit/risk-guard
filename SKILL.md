@@ -8,7 +8,7 @@ description: >
   ONLY use when explicitly requested or when a multi-step plan with real stakes
   is about to execute. Do NOT trigger for simple actions, info queries, or casual
   conversation.
-version: 2.0.0
+version: 2.0.1
 ---
 
 # Risk Guard — 周全思维

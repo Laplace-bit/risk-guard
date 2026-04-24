@@ -117,7 +117,7 @@ Add to your `opencode.json`:
 To pin a version:
 ```json
 {
-  "plugin": ["risk-guard@git+https://github.com/Laplace-bit/risk-guard.git#v2.0.0"]
+  "plugin": ["risk-guard@git+https://github.com/Laplace-bit/risk-guard.git#v2.0.1"]
 }
 ```
 See [`.opencode/INSTALL.md`](.opencode/INSTALL.md) for details.
@@ -146,7 +146,11 @@ Example case:
   "exposure_tags": ["chemical", "long_walking", "heat"],
   "counterparty_tags": [],
   "safeguard_tags": ["can_exit_independently"],
-  "constraint_tags": ["poor_medical_access"]
+  "constraint_tags": ["poor_medical_access"],
+  "transport_tags": [],
+  "anticipatory_tags": [],
+  "cognitive_bias_tags": [],
+  "anticipatory_safeguard_tags": []
 }
 ```
 
