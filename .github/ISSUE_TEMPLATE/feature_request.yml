@@ -1,0 +1,42 @@
+---
+name: Feature request
+about: Suggest a new scenario, tag, heuristic, or platform support
+about: Suggest a new scenario, tag, or improvement
+title: '[Feature] '
+labels: [enhancement, needs-triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or gap
+      description: What scenario or risk type is missing?
+      placeholder: 'e.g. There is no checklist for mobile app store releases'
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What would you add or change?
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Which part of risk-guard?
+      options:
+        - Quick Review (safety scenarios)
+        - Full Review - Phase 1 Checklists
+        - Full Review - Phase 2 Inversion
+        - Full Review - Phase 3 Pre-mortem
+        - Full Review - Phase 4 Stress Test
+        - Full Review - Phase 5 Scenario Planning
+        - Full Review - Phase 6 Resilience
+        - Risk Engine (Python)
+        - Installation / Platform support
+        - Documentation
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Links, references, or examples

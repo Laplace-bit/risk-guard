@@ -1,0 +1,52 @@
+---
+name: Installation issue
+about: "Can't install or can't get the skill to load"
+title: '[Install] '
+labels: [installation, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: 'Before opening: check [README install section](../#installation) for your platform.'
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Claude Code
+        - Gemini CLI
+        - OpenAI Codex CLI
+        - Cursor
+        - Hermes Agent
+        - OpenCode
+        - Windsurf / Kiro
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: 'Which risk-guard version? (e.g. v2.0.1)'
+      placeholder: v2.0.1
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command you ran
+      render: shell
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened?
+      description: Full error message or unexpected behavior
+  - type: textarea
+    id: what_expected
+    attributes:
+      label: What did you expect?
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Self-check
+      options:
+        - label: I checked the [README install section](../#installation) first
+        - label: I restarted the agent after installing
+        - label: I checked existing closed issues for my platform

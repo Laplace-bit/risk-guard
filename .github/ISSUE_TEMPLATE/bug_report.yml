@@ -1,0 +1,53 @@
+---
+name: Bug report
+about: Report a problem with Risk Guard output, logic, or behavior
+title: '[Bug] '
+labels: [bug, needs-triage]
+body:
+  - type: textarea
+    id: describe
+    attributes:
+      label: Describe the bug
+      description: What did risk-guard do wrong?
+      placeholder: 'e.g. It triggered on a casual "how are you" question despite not being a risk scenario.'
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: Exact prompt or scenario
+      render: markdown
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Claude Code
+        - Gemini CLI
+        - OpenAI Codex CLI
+        - Cursor
+        - Hermes Agent
+        - OpenCode
+        - Windsurf / Kiro
+        - Other
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      description: What should have happened instead?
+  - type: textarea
+    id: actual
+    attributes:
+      label: What actually happened?
+      description: Paste the actual output (or summarize)
+  - type: checkboxes
+    id: selfcheck
+    attributes:
+      label: Self-check
+      options:
+        - label: This is not a false-positive trigger (casual conversation)
+        - label: This is not a request for medical/legal advice
+        - label: I can reproduce this consistently
