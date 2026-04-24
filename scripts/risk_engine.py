@@ -68,6 +68,21 @@ WEIGHTS: Dict[str, int] = {
     "credential_request": 5,
     "threat_or_ultimatum": 5,
     "suspicious_payment_method": 4,
+    # anticipatory / coupling dimensions (v2.0)
+    "one_way_door": 5,
+    "no_rollback": 4,
+    "tight_coupling": 4,
+    "single_point_of_failure": 5,
+    "zero_time_slack": 3,
+    "zero_resource_slack": 3,
+    "unvalidated_assumption": 3,
+    "cross_system_dependency": 3,
+    # cognitive bias dimensions (v2.0)
+    "overconfidence": 3,
+    "planning_fallacy": 3,
+    "normalization_of_deviance": 4,
+    "survivorship_bias": 2,
+    "anchoring": 2,
     # safeguards (negative)
     "public_place": -2,
     "trusted_companion": -3,
@@ -80,16 +95,28 @@ WEIGHTS: Dict[str, int] = {
     "checked_weather": -2,
     "travel_insurance": -2,
     "verified_organization": -3,
+    # anticipatory safeguards (v2.0)
+    "rollback_tested": -3,
+    "feature_flags": -2,
+    "gradual_rollout": -2,
+    "monitoring_configured": -2,
+    "assumption_validated": -2,
+    "buffer_time": -2,
+    "buffer_resources": -2,
+    "second_opinion_obtained": -2,
+    "checklist_completed": -2,
+    "belief_update_signals": -1,
 }
 
 # ──────────────────────────────────────────────────────────────
 # Compound rules: when risk factors combine, extra danger
 # Format: (primary_set, secondary_set, bonus_score, description)
-# If secondary_set == {" confirmed_ppe"}, it's an "absence" rule:
+# If secondary_set == {"confirmed_ppe"}, it's an "absence" rule:
 #   triggered when primary is present but confirmed_ppe is NOT present.
 # ──────────────────────────────────────────────────────────────
 
 COMPOUND_RULES = [
+    # Original safety rules
     ({"pregnancy", "possible_pregnancy"}, {"chemical", "heat", "long_walking", "infectious", "radiation"}, 8,
      "pregnancy-sensitive vulnerability combined with hazardous exposure"),
     ({"night_travel", "isolation"}, {"unverified_stranger", "dead_phone_risk", "no_fallback_transport"}, 6,
@@ -108,6 +135,21 @@ COMPOUND_RULES = [
      "unsolicited contact requesting credentials or irreversible payment — classic scam pattern"),
     ({"threat_or_ultimatum"}, {"urgency", "suspicious_payment_method"}, 7,
      "threats or ultimatums combined with pressure to pay — high fraud risk"),
+    # Anticipatory / coupling rules (v2.0)
+    ({"one_way_door", "no_rollback"}, {"unvalidated_assumption", "tight_coupling"}, 8,
+     "irreversible action with unvalidated assumptions and tight coupling"),
+    ({"tight_coupling", "single_point_of_failure"}, {"zero_time_slack", "urgency"}, 7,
+     "tight coupling with single failure point under time pressure"),
+    ({"one_way_door"}, {"overconfidence", "planning_fallacy"}, 6,
+     "irreversible action combined with cognitive overconfidence"),
+    ({"cross_system_dependency"}, {"no_rollback", "tight_coupling"}, 6,
+     "cross-system dependency with no rollback in tightly coupled system"),
+    ({"normalization_of_deviance"}, {"tight_coupling", "isolation"}, 5,
+     "normalized deviance in tightly coupled or isolated situation"),
+    ({"planning_fallacy"}, {"zero_time_slack", "zero_resource_slack"}, 5,
+     "planning fallacy with zero slack — schedule will definitely slip"),
+    ({"overconfidence"}, {"unvalidated_assumption", "single_point_of_failure"}, 5,
+     "overconfidence hiding unvalidated assumptions at a single failure point"),
 ]
 
 # ──────────────────────────────────────────────────────────────
@@ -140,6 +182,9 @@ def normalize_case(data: Dict) -> Set[str]:
         "safeguard_tags",
         "constraint_tags",
         "transport_tags",
+        "anticipatory_tags",  # v2.0
+        "cognitive_bias_tags",  # v2.0
+        "anticipatory_safeguard_tags",  # v2.0
     ]:
         values = data.get(key, []) or []
         if not isinstance(values, list):

@@ -1,21 +1,25 @@
 {
   "name": "risk-guard",
-  "description": "Analyze planned real-world actions for low-probability high-impact risks. Structured safety review with compound risk modeling, targeted questions, and go/no-go judgments.",
-  "version": "1.2.0",
+  "description": "Help people think more thoroughly and avoid unexpected failures. Quick safety review for real-world actions + full 6-phase anticipatory thinking (checklists, inversion, pre-mortem, stress test, scenario planning, resilience).",
+  "version": "2.0.0",
   "type": "module",
   "author": {
     "name": "dzlin"
   },
   "homepage": "https://github.com/Laplace-bit/risk-guard",
   "repository": "https://github.com/Laplace-bit/risk-guard",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "keywords": [
     "risk",
     "safety",
     "risk-assessment",
-    "hazard-analysis",
-    "precaution",
-    "go-no-go",
-    "decision-support"
+    "pre-mortem",
+    "anticipatory-thinking",
+    "checklist",
+    "scenario-planning",
+    "resilience",
+    "antifragile",
+    "decision-support",
+    "cognitive-debiasing"
   ]
 }

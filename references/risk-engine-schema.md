@@ -10,6 +10,10 @@ Use this schema when calling `python scripts/risk_engine.py --input case.json`.
   "counterparty_tags": [],
   "safeguard_tags": ["can_exit_independently"],
   "constraint_tags": ["poor_medical_access"],
+  "transport_tags": [],
+  "anticipatory_tags": [],
+  "cognitive_bias_tags": [],
+  "anticipatory_safeguard_tags": [],
   "free_text": "optional case note"
 }
 ```
@@ -18,6 +22,7 @@ Use this schema when calling `python scripts/risk_engine.py --input case.json`.
 - Use short machine-friendly tags.
 - Prefer explicit tags over long free-text.
 - `free_text` is optional and only for human reference.
+- All tag fields default to `[]` when absent — the engine handles missing fields gracefully.
 - The engine returns a score, level, triggered rules, and explanation snippets.
 
 ## Complete Tag Reference
@@ -86,6 +91,27 @@ Use this schema when calling `python scripts/risk_engine.py --input case.json`.
 | threat_or_ultimatum | 5 | "Act now or lose access" / "Your account will be locked" |
 | suspicious_payment_method | 4 | Gift cards, crypto to unknown wallet, wire to unfamiliar account |
 
+### Anticipatory Tags (v2.0 — pre-mortem / coupling / resilience dimensions)
+| Tag | Weight | Description |
+|-----|--------|-------------|
+| one_way_door | 5 | Decision is irreversible or very costly to reverse |
+| no_rollback | 4 | No tested rollback path exists |
+| unvalidated_assumption | 3 | Key assumption not validated |
+| tight_coupling | 4 | Components depend on each other with zero slack |
+| single_point_of_failure | 5 | No fallback for a critical component |
+| cross_system_dependency | 3 | Failure propagates across system boundaries |
+| zero_time_slack | 3 | No time buffer for recovery |
+| zero_resource_slack | 3 | No resource buffer for recovery |
+
+### Cognitive Bias Tags (v2.0 — Kahneman-style debiasing)
+| Tag | Weight | Description |
+|-----|--------|-------------|
+| overconfidence | 3 | Timeline or outcome confidence exceeds accuracy |
+| planning_fallacy | 3 | Time/cost systematically underestimated |
+| anchoring | 2 | Estimate anchored to first available number |
+| survivorship_bias | 2 | Only considering successful cases |
+| normalization_of_deviance | 4 | "It worked before" tolerance of increasing risk |
+
 ### Safeguard Tags (negative weights reduce risk)
 | Tag | Weight | Description |
 |-----|--------|-------------|
@@ -100,3 +126,17 @@ Use this schema when calling `python scripts/risk_engine.py --input case.json`.
 | checked_weather | -2 | Weather and route conditions verified before travel |
 | travel_insurance | -2 | Travel or trip insurance in place |
 | verified_organization | -3 | Organization or venue independently verified as legitimate |
+| feature_flags | -2 | Feature flags or kill switch available for rollback |
+| gradual_rollout | -2 | Canary / staged rollout plan in place |
+| belief_update_signals | -1 | Defined thresholds for plan revision |
+
+### Anticipatory Safeguard Tags (v2.0 — reduce pre-mortem/coupling risk)
+| Tag | Weight | Description |
+|-----|--------|-------------|
+| rollback_tested | -3 | Rollback plan tested and confirmed working |
+| buffer_time | -2 | Time buffer added to schedule |
+| buffer_resources | -2 | Resource buffer (compute, budget, people) set aside |
+| second_opinion_obtained | -2 | Independent person reviewed the plan |
+| monitoring_configured | -2 | Leading indicators set up before execution |
+| checklist_completed | -2 | Phase 1 checklist fully completed |
+| assumption_validated | -2 | Key assumptions confirmed through independent check |

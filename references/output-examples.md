@@ -175,3 +175,106 @@ Bank account drained, identity theft enabling credit fraud, credential reuse exp
 
 ### Confidence
 High — the domain mismatch and urgency pattern are unambiguous phishing signals.
+
+---
+
+## Full Review Example: Production Database Migration
+
+### 🧠 Risk Guard — Full Review
+
+**Plan:** Migrate production PostgreSQL (500 GB, ~200 concurrent users) to MySQL this weekend. Estimated downtime: 4 hours on Saturday. Rollback plan exists but only tested in staging.
+
+---
+
+**Phase 1 — Checklist:**
+
+| Item | Status | Note |
+|------|:------:|------|
+| Rollback path tested? | ⚠️ | Tested in staging only. Production scale is 10x larger. |
+| Database migration reversible? | 🔴 | Schema differences (JSONB, arrays, CTEs) — some transformations may not reverse cleanly. |
+| Feature flags in place? | ✅ | Kill switch can redirect read traffic back to PostgreSQL. |
+| Monitoring and alerts set up? | ⚠️ | Key metrics defined but no baseline for MySQL performance under full production load. |
+| Write path dual-run tested? | ⚠️ | Dual-write tested for 48h in staging. Production dual-write not possible due to connection limits. |
+| Migration script tested at scale? | 🔴 | Tested with 1 GB (0.2% of production data). 500 GB behavior untested. |
+| Data comparison plan exists? | ✅ | Row count + checksum comparison script ready. But no test at 500 GB. |
+| Stakeholders notified? | ✅ | Team aware, maintenance window approved. |
+
+**Checklist verdict:** 2 🔴 blockers + 3 ⚠️ risks. Migration should not proceed as described.
+
+---
+
+**Phase 2 — Death zones & one-way doors:**
+
+- **Death zone (🔴):** Schema transformation errors on JSONB columns — PostgreSQL JSONB data type has no direct MySQL equivalent. Lossy conversion of nested JSON operations may silently corrupt data with no detection signal.
+- **Death zone (🔴):** Foreign key cascade path change — the production app uses 17 FK cascades. A single FK mapping mismatch in the migration script could orphan data across 4+ tables.
+- **One-way door (🔴):** ETL cutover — once app writes switch to MySQL, the PostgreSQL instance has new data that was never in MySQL. Rolling back means 4+ hours of lost writes.
+- **One-way door (🟡):** Migration script running in production with no pause point — 4-hour script can't be stopped mid-way without risking partial migration state.
+
+**Linchpin assumption:** "The 1 GB test accurately predicts 500 GB behavior." — If wrong, the migration takes 12+ hours instead of 4, exceeding the maintenance window.
+
+---
+
+**Phase 3 — Failure hypotheses:**
+
+| # | Failure Narrative | Likelihood | Severity | Detectable? | Early Signal |
+|---|------------------|:----------:|:--------:|:-----------:|-------------|
+| 1 | Migration script hits unindexed FK at row 300M, locks both tables for 40 minutes, app timeout cascades | High | Data corrupt | No | No — lock is invisible until it happens |
+| 2 | JSONB → TEXT conversion silently drops nested data in 12% of records; data inconsistency found 3 days post-migration | Medium | Data loss | No | No — silent transformation |
+| 3 | MySQL connection pool is 1/4 of PostgreSQL's; under post-migration peak load, connections queue up and health checks fail | Medium | Service down | Partial | Connection wait times increase before failure |
+
+- **Inaction cost:** Not migrating means ongoing PostgreSQL licensing cost + increasing maintenance burden as data grows. But rushing the migration risks data loss that would set the project back 6+ months.
+
+---
+
+**Phase 4 — Fragility map:**
+
+| Component | Fragile Under | Condition |
+|-----------|--------------|-----------|
+| Schema migration script | Data volume 10x tested | 500 GB → memory exhaustion |
+| JSONB conversion | Any non-ASCI JSON structure | 12% records affected |
+| Write path cutover | Rollback needed after MySQL receives data | 4+ hours data loss |
+| Team | Only 1 person knows PostgreSQL schema details | Bus factor = 1 |
+
+**Debiased estimates:**
+| Estimate | Inside View | Outside View (base rate) | Adjusted |
+|:--------:|:-----------:|:------------------------:|:--------:|
+| Migration time | 4 hours | Similar DB migrations: 6-14 hours (N=8 orgs) | 8-12 hours |
+| Success rate | "90% confident" | Industry DB migration: ~65% first-attempt success | 50-65% |
+| Data integrity | "We'll catch issues" | Silent data loss found in ~30% of post-migration audits | 30% chance of undetected issues |
+
+---
+
+**Phase 5 — Scenario test:**
+
+| Scenario | Plan works? | Fragile points |
+|----------|:-----------:|---------------|
+| 🚀 **"Smooth Sailing"** — Schema maps cleanly, no edge cases, script finishes in 3.5h | ✅ | Works but no room for error |
+| 💥 **"The Hidden Schema"** — Production has undocumented FK triggers, migration fails at 65% | ❌ | No incremental checkpoint; total restart needed |
+| 🐌 **"Slow Burn"** — 500 GB takes 11 hours, maintenance window expires at 6h, team decides to abort mid-migration | ❌ | No pause-and-rollback point; partial state is unrecoverable |
+| 🏥 **"Silent Corruption"** — Migration completes on time but JSONB conversion corrupted 5% of user profile data | ⚠️ | No automated data quality check post-migration; corruption detected by user support tickets 48h later |
+
+**Robust actions:** Add migration checkpoints at every 25% and validate data integrity incrementally.
+**Hedging actions:** Keep both DBs running for 7 days post-cutover; maintain read-traffic redirect to PostgreSQL as safety valve.
+
+---
+
+**Phase 6 — Resilience:**
+
+- **Antifragile moves:** After migration, rebuild the schema comparison tool as a reusable framework — it gets stronger with each migration experience. Consider this the first of many.
+- **Graceful degradation:** If MySQL becomes read-only under load, keep PostgreSQL read replica online as fallback for read queries (degraded but functional).
+- **Watch signals:**
+  - 🟢 **Green:** First 10% of data migrates in <30 min, no FK errors
+  - 🟡 **Yellow:** Per-100GB migration time >50 min → escalate, consider pausing at next checkpoint
+  - 🔴 **Red:** Any FK violation or data type error → STOP migration immediately, revert to PostgreSQL
+- **Recommended slack:** Add 2 extra hours to maintenance window (6h instead of 4). Assign a second engineer to monitor MySQL connection pool live.
+
+---
+
+**Blind spot alert:** Nobody tested the migration script against production's actual index configuration. Staging indexes are a simplified subset. A missing composite index on the order_history table (120M rows) could turn a 10-second query into a 30-minute full table scan — inside the migration transaction.
+
+**Recommended guardrails (top 5):**
+1. 🔴 **Do NOT migrate without running the script against a production-size data sample** — even a partial snapshot (50 GB) would catch the volume issue
+2. 🔴 **Add incremental checkpoints** — migration should be resumable, not all-or-nothing
+3. 🟡 **Dual-write for 7 days post-migration** — keeps PostgreSQL as a true fallback, not a theoretical one
+4. 🟡 **Run automated data quality checks immediately post-migration** — row count + checksum + 5% random sample deep-compare
+5. 🟡 **Assign a named second engineer** — bus factor < 2 is unacceptable for an irreversible operation of this scale

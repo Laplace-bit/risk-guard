@@ -10,6 +10,8 @@
 - Dependent or caregiver failure
 - Environmental exposure and entrapment
 - Digital fraud and deception
+- Technical system failure
+- Project or plan failure
 
 ## Compound-Risk Logic
 
@@ -21,6 +23,9 @@ Examples:
 - Private meeting + weak identity verification + alcohol + transport dependency
 - Urgent wire transfer + secrecy + new counterparty + identity mismatch
 - Emotional attachment + isolated communication channel + requests for money + reluctance to video call
+- **Tight coupling + no rollback + time pressure** → system failure cascade
+- **One-way door + unvalidated assumption + no detection signal** → irreversible failure
+- **Planning fallacy + no reference class + overconfidence** → underestimated risk
 
 ## Level Definitions
 
@@ -28,23 +33,29 @@ Examples:
 - Routine activity with known safeguards
 - Downside is minor and reversible
 - No significant vulnerability or exposure
+- No one-way doors identified
 
 ### Yellow (6–11)
 - Inconvenience or mild harm possible but controls exist
 - User has fallback options and can exit independently
 - Uncertainty exists but downside appears reversible
+- Checklist items mostly confirmed, 1-2 items ⚠️
 
 ### Orange (12–18)
 - Plausible serious harm or significant money loss
 - Multiple moderate factors stack
 - Key safeguards are missing
-- User language shows pressure or minimization
+- One-way doors identified with partial guardrails
+- Pre-mortem reveals medium-likelihood failure narratives
 
 ### Red (19+)
 - Credible severe or irreversible harm
 - Vulnerable person + hazardous exposure
 - Isolation + no exit + unknown counterpart risk
 - Large irreversible transfer under time pressure
+- One-way doors with no checkpoints
+- Pre-mortem reveals high-likelihood failure with no early signal
+- Normal accident zone (high complexity + tight coupling)
 
 ## Red Flags That Should Heavily Escalate
 - Irreversible health harm is credible
@@ -60,28 +71,36 @@ Examples:
 - Counterparty refuses video call or voice verification
 - User is coached on what to say to banks or authorities
 - User shows emotional dependency on an unverified online persona
+- **One-way door identified with no rollback path**
+- **User minimizes risk explicitly: "应该没问题", "probably fine", "just once"**
+- **Planning fallacy detected: timeline/cost estimates with no reference class**
+- **Tight coupling: plan depends on single points of failure with zero slack**
 
-## Digital Fraud and Deception — Category Details
+## Anticipatory Risk Dimensions
 
-### Phishing / Social Engineering
-- Deceptive messages impersonating institutions, services, or known contacts to extract credentials, financial info, or security codes
-- Includes spear-phishing, vishing (voice), smishing (SMS), and business email compromise
+Beyond the standard vulnerability/exposure/friction model, assess these
+dimensions when applying deep thinking lenses:
 
-### Identity Theft
-- Unauthorized use of personal information (SSN, ID documents, biometrics) to open accounts, make purchases, or commit fraud
-- Includes synthetic identity creation combining real and fabricated data
+### Inversion Signals
+- Guaranteed failure conditions present in plan
+- Linchpin assumptions without validation
+- Death zones (structurally irreversible states)
 
-### Payment Fraud
-- Unauthorized transactions, stolen card use, chargeback abuse, or manipulated payment systems
-- Includes advance-fee fraud, invoice scams, and overpayment schemes
+### Coupling Signals
+- Single points of failure with no fallback
+- Time pressure eliminating buffer for error recovery
+- Cross-system dependencies where failures propagate
 
-### Romance Scams
-- Prolonged emotional manipulation through feigned romantic interest to extract money, personal information, or cooperation in secondary fraud
-- Typically involves fabricated persona, reluctance to meet in person, and escalating financial requests
+### Cognitive Bias Signals
+- Overconfidence in timeline or outcome
+- Anchoring on initial estimates without adjustment
+- Survivorship bias (only seeing successful cases)
+- Normalization of deviance ("it worked before")
 
-### Impersonation
-- Posing as a trusted individual (friend, family, boss, official) or institution to redirect payments, extract sensitive data, or gain access to systems
-- Includes deepfake audio/video and account takeover for social engineering
+### Resilience Signals
+- Zero slack in time, money, or resources
+- No monitoring signals that would trigger plan revision
+- All scenarios depend on best-case conditions
 
 ## Confidence Logic
 
@@ -89,12 +108,15 @@ Examples:
 - Most material facts known
 - Hazard pathway is clear
 - Controls are confirmed
+- No one-way doors or linchpin assumptions
 
 **Medium:**
 - Some key facts known, some unresolved
 - Direction of risk is clear but magnitude uncertain
+- Some checklist items unconfirmed
 
 **Low:**
 - Critical facts missing
 - Scenario class still ambiguous
 - Outcome depends heavily on unknown controls or unknown counterpart behavior
+- One-way doors identified without checkpoints
