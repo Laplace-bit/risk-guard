@@ -21,9 +21,49 @@ Use this schema when calling `python scripts/risk_engine.py --input case.json`.
 ## Notes
 - Use short machine-friendly tags.
 - Prefer explicit tags over long free-text.
-- `free_text` is optional and only for human reference.
+- `free_text` is optional and only for human reference. It is accepted but not used in scoring.
 - All tag fields default to `[]` when absent — the engine handles missing fields gracefully.
-- The engine returns a score, level, triggered rules, and explanation snippets.
+- The engine returns a score, level, triggered rules, rule details, and explanation snippets.
+- Tags not in the weight dictionary produce a warning and are ignored in scoring.
+- `scenario_tags` contribute a small base weight (+1 or +2) per scenario. This means the scenario classification itself carries a small risk signal.
+
+## Absence Rules
+
+Most compound rules trigger when **both** primary and secondary tags are present. One rule uses an **absence** pattern:
+
+- **`confirmed_ppe` absence rule**: When hazardous conditions exist (`chemical`, `dust`, `radiation`, or `heat`) and `confirmed_ppe` is **not** present, the rule triggers. This is the only absence-style rule — all others are presence-based.
+
+## Output Format
+
+The engine outputs JSON with these fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `score` | int | Total risk score after all weights and compound rules |
+| `level` | string | green / yellow / orange / red |
+| `level_label` | string | Human-readable level description with emoji |
+| `reasons` | string[] | Per-tag scoring breakdown (e.g., "chemical (+6)") |
+| `triggered_rules` | string[] | Human-readable compound rule descriptions |
+| `rule_details` | object[] | Structured rule data: rule name, bonus, matched tags, type (presence/absence) |
+| `warnings` | string[] | Non-fatal issues: unknown tags, free_text note (only present if there are warnings) |
+
+## CLI Options
+
+```bash
+# From file
+python scripts/risk_engine.py --input case.json
+
+# From stdin
+echo '{"vulnerability_tags":["pregnancy"]}' | python scripts/risk_engine.py --stdin
+
+# Verbose output
+python scripts/risk_engine.py --input case.json --verbose
+
+# Output formats
+python scripts/risk_engine.py --input case.json --format json      # default
+python scripts/risk_engine.py --input case.json --format markdown   # markdown table
+python scripts/risk_engine.py --input case.json --format plain      # plain text
+```
 
 ## Complete Tag Reference
 

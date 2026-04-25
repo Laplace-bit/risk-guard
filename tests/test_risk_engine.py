@@ -9,18 +9,30 @@ from pathlib import Path
 SCRIPT = Path(__file__).parent.parent / "scripts" / "risk_engine.py"
 
 
-def run_engine(case: dict) -> dict:
+def run_engine(case: dict, stdin: bool = False, fmt: str = "json") -> dict:
     """Run the risk engine on a case dict and return parsed result."""
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-        json.dump(case, f)
-        f.flush()
+    if stdin:
         result = subprocess.run(
-            [sys.executable, str(SCRIPT), "--input", f.name],
-            capture_output=True, text=True
+            [sys.executable, str(SCRIPT), "--stdin", f"--format={fmt}"],
+            input=json.dumps(case), capture_output=True, text=True
         )
-    Path(f.name).unlink(missing_ok=True)
+    else:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            json.dump(case, f)
+            f.flush()
+            result = subprocess.run(
+                [sys.executable, str(SCRIPT), "--input", f.name, f"--format={fmt}"],
+                capture_output=True, text=True
+            )
+        Path(f.name).unlink(missing_ok=True)
+
     assert result.returncode == 0, f"Engine failed: {result.stderr}"
-    return json.loads(result.stdout)
+    if fmt == "json":
+        return json.loads(result.stdout)
+    return result.stdout
+
+
+# ── Original tests ──
 
 
 def test_green_low_risk():
@@ -396,17 +408,262 @@ def test_safeguards_dramatically_reduce_score():
     assert reduction >= 10, f"Safeguards should reduce score by >=10, got {reduction}"
 
 
+# ── New tests: v2.1 features ──
+
+
+def test_unknown_tag_warning():
+    """Unknown tags should produce a warning."""
+    result = run_engine({
+        "scenario_tags": [],
+        "vulnerability_tags": ["fatigue", "nonexistent_tag"],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert "warnings" in result, "Expected warnings for unknown tag"
+    assert any("nonexistent_tag" in w for w in result["warnings"]), \
+        f"Expected warning about nonexistent_tag, got: {result['warnings']}"
+
+
+def test_free_text_warning():
+    """free_text should produce a warning about not being used in scoring."""
+    result = run_engine({
+        "scenario_tags": [],
+        "vulnerability_tags": [],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+        "free_text": "User is traveling alone at night",
+    })
+    assert "warnings" in result, "Expected warning about free_text"
+    assert any("free_text" in w for w in result["warnings"]), \
+        f"Expected warning about free_text, got: {result['warnings']}"
+
+
+def test_no_warnings_for_valid_case():
+    """Valid case with no unknown tags should not produce warnings."""
+    result = run_engine({
+        "scenario_tags": ["travel_and_mobility"],
+        "vulnerability_tags": ["fatigue"],
+        "exposure_tags": ["night_travel"],
+        "counterparty_tags": [],
+        "safeguard_tags": ["can_exit_independently"],
+        "constraint_tags": [],
+    })
+    assert "warnings" not in result, f"Unexpected warnings: {result.get('warnings')}"
+
+
+def test_scenario_tags_weight():
+    """Scenario tags should contribute a small base weight to the score."""
+    base = {
+        "scenario_tags": [],
+        "vulnerability_tags": [],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    }
+    with_high_risk_scenario = {
+        **base,
+        "scenario_tags": ["health_sensitive_activity", "transaction_payment_or_asset_transfer"],
+    }
+    score_base = run_engine(base)["score"]
+    score_scenario = run_engine(with_high_risk_scenario)["score"]
+    assert score_scenario > score_base, \
+        f"Scenario tags should increase score: {score_scenario} <= {score_base}"
+
+
+def test_rule_details_structure():
+    """Compound rules should include detailed matching info."""
+    result = run_engine({
+        "scenario_tags": [],
+        "vulnerability_tags": [],
+        "exposure_tags": ["non_reversible_payment"],
+        "counterparty_tags": ["urgency", "secrecy"],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert len(result["triggered_rules"]) > 0, "Expected compound rules to trigger"
+    assert "rule_details" in result, "Expected rule_details in output"
+    for detail in result["rule_details"]:
+        assert "rule" in detail, f"Missing 'rule' in detail: {detail}"
+        assert "bonus" in detail, f"Missing 'bonus' in detail: {detail}"
+        assert "type" in detail, f"Missing 'type' in detail: {detail}"
+        assert detail["type"] in ("presence", "absence"), f"Unexpected type: {detail['type']}"
+
+
+def test_absence_rule_detail():
+    """Absence rule (confirmed_ppe) should have type='absence' in rule_details."""
+    result = run_engine({
+        "scenario_tags": [],
+        "vulnerability_tags": [],
+        "exposure_tags": ["chemical", "heat"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    absence_rules = [d for d in result.get("rule_details", []) if d.get("type") == "absence"]
+    assert len(absence_rules) > 0, "Expected at least one absence rule for hazardous conditions without PPE"
+    assert any("ppe" in d["rule"].lower() or "unconfirmed" in d["rule"].lower() for d in absence_rules), \
+        f"Expected PPE absence rule, got: {absence_rules}"
+
+
+def test_stdin_input():
+    """--stdin should accept JSON from stdin."""
+    case = {
+        "scenario_tags": ["travel_and_mobility"],
+        "vulnerability_tags": ["fatigue"],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    }
+    result = run_engine(case, stdin=True)
+    assert result["level"] in ("green", "yellow"), f"Expected green/yellow, got {result['level']}"
+
+
+def test_format_markdown():
+    """--format=markdown should produce markdown output."""
+    case = {
+        "scenario_tags": [],
+        "vulnerability_tags": ["pregnancy"],
+        "exposure_tags": ["chemical"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    }
+    output = run_engine(case, fmt="markdown")
+    assert "## Risk Assessment" in output, f"Expected markdown header in output"
+    assert "RED" in output or "ORANGE" in output, f"Expected risk level in markdown output"
+
+
+def test_format_plain():
+    """--format=plain should produce plain text output."""
+    case = {
+        "scenario_tags": [],
+        "vulnerability_tags": ["fatigue"],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    }
+    output = run_engine(case, fmt="plain")
+    assert "Level:" in output, f"Expected 'Level:' in plain output"
+
+
+def test_invalid_json_error():
+    """Invalid JSON should produce an error message and non-zero exit."""
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--stdin"],
+        input="not json", capture_output=True, text=True
+    )
+    assert result.returncode != 0, "Expected non-zero exit for invalid JSON"
+    assert "invalid JSON" in result.stderr.lower() or "error" in result.stderr.lower(), \
+        f"Expected error message, got: {result.stderr}"
+
+
+def test_missing_file_error():
+    """Non-existent file should produce an error."""
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--input", "/nonexistent/path/case.json"],
+        capture_output=True, text=True
+    )
+    assert result.returncode != 0, "Expected non-zero exit for missing file"
+
+
+def test_no_input_or_stdin_error():
+    """Running without --input or --stdin should produce an error."""
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT)],
+        capture_output=True, text=True
+    )
+    assert result.returncode != 0, "Expected non-zero exit when no input provided"
+
+
+def test_boundary_score_green_yellow():
+    """Score of 6 should be yellow (boundary between green and yellow)."""
+    # fatigue(2) + night_travel(3) + scenario(1) = 6 → yellow
+    result = run_engine({
+        "scenario_tags": ["travel_and_mobility"],
+        "vulnerability_tags": ["fatigue"],
+        "exposure_tags": ["night_travel"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["score"] >= 6, f"Expected score >= 6, got {result['score']}"
+    # The level should be yellow or higher
+    assert result["level"] in ("yellow", "orange", "red"), \
+        f"Expected yellow+, got {result['level']} (score {result['score']})"
+
+
+def test_empty_tags_list():
+    """All empty lists should score 0 (green)."""
+    result = run_engine({
+        "scenario_tags": [],
+        "vulnerability_tags": [],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+        "transport_tags": [],
+        "anticipatory_tags": [],
+        "cognitive_bias_tags": [],
+        "anticipatory_safeguard_tags": [],
+    })
+    assert result["score"] == 0, f"Expected score 0, got {result['score']}"
+    assert result["level"] == "green"
+    assert len(result["triggered_rules"]) == 0
+
+
+def test_ppe_absence_rule_triggered():
+    """Hazardous conditions without confirmed_ppe should trigger absence rule."""
+    without_ppe = run_engine({
+        "scenario_tags": [],
+        "vulnerability_tags": [],
+        "exposure_tags": ["chemical", "heat"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    with_ppe = run_engine({
+        "scenario_tags": [],
+        "vulnerability_tags": [],
+        "exposure_tags": ["chemical", "heat"],
+        "counterparty_tags": [],
+        "safeguard_tags": ["confirmed_ppe"],
+        "constraint_tags": [],
+    })
+    # Without PPE should have a higher score (absence rule triggers)
+    assert without_ppe["score"] > with_ppe["score"], \
+        f"Absence rule should increase score without PPE: {without_ppe['score']} <= {with_ppe['score']}"
+    # Without PPE should have triggered the absence compound rule
+    assert any("ppe" in r.lower() or "unconfirmed" in r.lower() for r in without_ppe["triggered_rules"]), \
+        f"Expected PPE absence rule, got: {without_ppe['triggered_rules']}"
+
+
 if __name__ == "__main__":
-    tests = [test_green_low_risk, test_red_high_risk, test_orange_compound_risk,
-             test_safeguards_reduce_score, test_yellow_moderate_risk, test_empty_case,
-             test_driver_fatigue_compound, test_digital_fraud_unsolicited_credential,
-             test_digital_fraud_unsolicited_threat, test_business_trip_with_transport,
-             test_one_way_door_compound, test_tight_coupling_spof_urgency,
-             test_overconfidence_one_way_door, test_anticipatory_safeguards_reduce_score,
-             test_planning_fallacy_zero_slack, test_checklist_safeguard,
-             test_travel_safeguards_reduce_score, test_verified_identity_reversible_payment,
-             test_ppe_and_medical_safeguard, test_deployment_safeguards_reduce_risk,
-             test_safeguards_dramatically_reduce_score]
+    tests = [
+        # Original tests
+        test_green_low_risk, test_red_high_risk, test_orange_compound_risk,
+        test_safeguards_reduce_score, test_yellow_moderate_risk, test_empty_case,
+        test_driver_fatigue_compound, test_digital_fraud_unsolicited_credential,
+        test_digital_fraud_unsolicited_threat, test_business_trip_with_transport,
+        test_one_way_door_compound, test_tight_coupling_spof_urgency,
+        test_overconfidence_one_way_door, test_anticipatory_safeguards_reduce_score,
+        test_planning_fallacy_zero_slack, test_checklist_safeguard,
+        test_travel_safeguards_reduce_score, test_verified_identity_reversible_payment,
+        test_ppe_and_medical_safeguard, test_deployment_safeguards_reduce_risk,
+        test_safeguards_dramatically_reduce_score,
+        # New tests: v2.1 features
+        test_unknown_tag_warning, test_free_text_warning, test_no_warnings_for_valid_case,
+        test_scenario_tags_weight, test_rule_details_structure, test_absence_rule_detail,
+        test_stdin_input, test_format_markdown, test_format_plain,
+        test_invalid_json_error, test_missing_file_error, test_no_input_or_stdin_error,
+        test_boundary_score_green_yellow, test_empty_tags_list, test_ppe_absence_rule_triggered,
+    ]
     for t in tests:
         t()
         print(f"✓ {t.__name__}")

@@ -1,4 +1,84 @@
-# Output Examples
+# Output Formats and Examples
+
+## Quick Review Output Format
+
+Every Quick Review response MUST contain these sections in order:
+
+### Situation summary
+One sentence: what, where, when, with whom.
+
+### What I found automatically
+Facts verified by search. Or: "No independent search was performed."
+
+### Decision
+green / yellow / orange / red — plain-language takeaway.
+
+### Why this is risky
+3 bullets max. Focus on compound risk.
+
+### Missing critical facts
+Items that could change the recommendation. Or: "none that materially change the judgment."
+
+### Best next actions
+3-5 actions in priority order.
+
+### Worst credible outcomes
+Most material low-probability high-impact outcomes.
+
+### Confidence
+high / medium / low — one-line reason.
+
+---
+
+## Full Review Output Format
+
+### 🧠 Risk Guard — Full Review
+
+**Plan:** [one-line summary]
+
+**Phase 1 — Checklist:**
+| Item | Status | Note |
+|------|--------|------|
+| ... | ✅/⚠️/🔴 | ... |
+
+**Phase 2 — Death zones & one-way doors:**
+- [Death zone]: [why unrecoverable]
+- [One-way door 🟡/🔴]: [what makes it irreversible]
+
+**Phase 3 — Failure hypotheses:**
+1. [Most likely] — likelihood × severity
+2. [Second] — ...
+3. [Unexpected] — ...
+- **Inaction cost:** [what happens if we do nothing]
+- **Kill assumption:** [the single assumption whose failure would reverse this entire assessment]
+
+**Phase 4 — Fragility map:**
+- [Component]: fragile under [condition]
+- **Debiased estimates:** [original → corrected]
+
+**Phase 5 — Scenario test:**
+| Scenario | Plan works? | Fragile points |
+|----------|:-----------:|---------------|
+| [A] | ✅/⚠️/❌ | ... |
+
+**Phase 6 — Resilience:**
+- **Antifragile moves:** [where plan benefits from disruption]
+- **Graceful degradation:** [what fails first, what survives]
+- **Watch signals:** [observations that should trigger revision]
+- **Recommended slack:** [where to add buffer]
+
+**Blind spot alert:** [The one thing across all phases nobody thought to check]
+
+**Recommended guardrails (top 5):**
+1. ...
+2. ...
+3. ...
+4. ...
+5. ...
+
+---
+
+## Output Examples
 
 ## Example 1: Pregnancy Plus Chemical Site Visit
 
@@ -223,6 +303,7 @@ High — the domain mismatch and urgency pattern are unambiguous phishing signal
 | 3 | MySQL connection pool is 1/4 of PostgreSQL's; under post-migration peak load, connections queue up and health checks fail | Medium | Service down | Partial | Connection wait times increase before failure |
 
 - **Inaction cost:** Not migrating means ongoing PostgreSQL licensing cost + increasing maintenance burden as data grows. But rushing the migration risks data loss that would set the project back 6+ months.
+- **Kill assumption:** "The 1 GB test accurately predicts 500 GB behavior." — If wrong, the migration takes 12+ hours instead of 4, exceeding the maintenance window. Verify with a 50 GB partial migration before committing.
 
 ---
 

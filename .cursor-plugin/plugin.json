@@ -8,7 +8,7 @@
   },
   "homepage": "https://github.com/Laplace-bit/risk-guard",
   "repository": "https://github.com/Laplace-bit/risk-guard",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "keywords": [
     "risk",
     "safety",
@@ -22,7 +22,7 @@
     "cognitive-debiasing",
     "decision-support"
   ],
-  "skills": "./skills/",
+  "skills": "./",
   "agents": "./agents/",
   "commands": "./commands/",
   "hooks": "./hooks/hooks-cursor.json"

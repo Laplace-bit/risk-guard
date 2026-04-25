@@ -7,6 +7,8 @@ triggered compound rules, and itemized scoring breakdown.
 Usage:
     python scripts/risk_engine.py --input case.json
     python scripts/risk_engine.py --input case.json --verbose
+    echo '{"vulnerability_tags":["pregnancy"]}' | python scripts/risk_engine.py --stdin
+    python scripts/risk_engine.py --input case.json --format markdown
 """
 
 from __future__ import annotations
@@ -15,7 +17,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Tuple
 
 # ──────────────────────────────────────────────────────────────
 # Weights: positive = risk factor, negative = safeguard
@@ -108,6 +110,22 @@ WEIGHTS: Dict[str, int] = {
     "belief_update_signals": -1,
 }
 
+# Scenario base weights: each scenario classification adds a small baseline risk
+SCENARIO_WEIGHTS: Dict[str, int] = {
+    "travel_and_mobility": 1,
+    "workplace_or_site_visit": 1,
+    "health_sensitive_activity": 2,
+    "stranger_interaction_or_relationship_meeting": 2,
+    "housing_or_property_viewing": 1,
+    "transaction_payment_or_asset_transfer": 2,
+    "caregiving_or_dependent_protection": 1,
+    "outdoor_or_environmental_exposure": 1,
+    "nightlife_or_isolated_time_movement": 2,
+    "online_to_offline_conversion": 2,
+    "business_trip_or_multi_day_travel": 1,
+    "digital_fraud_scam_or_phishing_risk": 2,
+}
+
 # ──────────────────────────────────────────────────────────────
 # Compound rules: when risk factors combine, extra danger
 # Format: (primary_set, secondary_set, bonus_score, description)
@@ -115,7 +133,7 @@ WEIGHTS: Dict[str, int] = {
 #   triggered when primary is present but confirmed_ppe is NOT present.
 # ──────────────────────────────────────────────────────────────
 
-COMPOUND_RULES = [
+COMPOUND_RULES: List[Tuple[Set[str], Set[str], int, str]] = [
     # Original safety rules
     ({"pregnancy", "possible_pregnancy"}, {"chemical", "heat", "long_walking", "infectious", "radiation"}, 8,
      "pregnancy-sensitive vulnerability combined with hazardous exposure"),
@@ -156,14 +174,14 @@ COMPOUND_RULES = [
 # Level thresholds
 # ──────────────────────────────────────────────────────────────
 
-LEVELS = [
+LEVELS: List[Tuple[int, int, str]] = [
     (0, 5, "green"),
     (6, 11, "yellow"),
     (12, 18, "orange"),
     (19, 999, "red"),
 ]
 
-LEVEL_LABELS = {
+LEVEL_LABELS: Dict[str, str] = {
     "green": "✅ Low risk. Proceed with normal precautions.",
     "yellow": "⚠️ Moderate risk. Proceed with added safeguards.",
     "orange": "🟠 Significant risk. Do not proceed without mitigations.",
@@ -171,9 +189,15 @@ LEVEL_LABELS = {
 }
 
 
-def normalize_case(data: Dict) -> Set[str]:
-    """Extract and normalize all tags from a case JSON."""
+def normalize_case(data: Dict) -> Tuple[Set[str], List[str]]:
+    """Extract and normalize all tags from a case JSON.
+
+    Returns (tags, warnings) where warnings list unknown tags
+    and notes about ignored fields.
+    """
     tags: Set[str] = set()
+    warnings: List[str] = []
+
     for key in [
         "scenario_tags",
         "vulnerability_tags",
@@ -182,15 +206,26 @@ def normalize_case(data: Dict) -> Set[str]:
         "safeguard_tags",
         "constraint_tags",
         "transport_tags",
-        "anticipatory_tags",  # v2.0
-        "cognitive_bias_tags",  # v2.0
-        "anticipatory_safeguard_tags",  # v2.0
+        "anticipatory_tags",
+        "cognitive_bias_tags",
+        "anticipatory_safeguard_tags",
     ]:
         values = data.get(key, []) or []
         if not isinstance(values, list):
             raise ValueError(f"{key} must be a list, got {type(values).__name__}")
-        tags.update(str(v).strip() for v in values if str(v).strip())
-    return tags
+        for v in values:
+            tag = str(v).strip()
+            if tag:
+                if tag not in WEIGHTS and tag not in SCENARIO_WEIGHTS:
+                    warnings.append(f"Unknown tag '{tag}' in {key} — will be ignored in scoring")
+                tags.add(tag)
+
+    # Warn about free_text being ignored
+    free_text = data.get("free_text", "")
+    if free_text and str(free_text).strip():
+        warnings.append("free_text is accepted but not used in scoring — for human reference only")
+
+    return tags, warnings
 
 
 def evaluate(tags: Set[str]) -> Dict:
@@ -198,27 +233,50 @@ def evaluate(tags: Set[str]) -> Dict:
     score = 0
     reasons: List[str] = []
     triggered_rules: List[str] = []
+    rule_details: List[Dict] = []
 
-    # Individual tag scoring
+    # Individual tag scoring (including scenario base weights)
     for tag in sorted(tags):
         weight = WEIGHTS.get(tag, 0)
-        score += weight
-        if weight > 0:
-            reasons.append(f"{tag} (+{weight})")
-        elif weight < 0:
-            reasons.append(f"{tag} ({weight})")
+        scenario_weight = SCENARIO_WEIGHTS.get(tag, 0)
+        total = weight + scenario_weight
+        if total != 0:
+            score += total
+            if weight > 0:
+                reasons.append(f"{tag} (+{weight})")
+            elif scenario_weight > 0:
+                reasons.append(f"{tag} (scenario: +{scenario_weight})")
+            elif weight < 0:
+                reasons.append(f"{tag} ({weight})")
 
     # Compound rule scoring
     for primary, secondary, bonus, note in COMPOUND_RULES:
-        if tags.intersection(primary):
+        primary_matched = tags.intersection(primary)
+        if primary_matched:
             if secondary == {"confirmed_ppe"}:
                 # Absence rule: primary present but safeguard absent
                 if "confirmed_ppe" not in tags:
                     score += bonus
                     triggered_rules.append(f"{note} (+{bonus})")
-            elif tags.intersection(secondary):
-                score += bonus
-                triggered_rules.append(f"{note} (+{bonus})")
+                    rule_details.append({
+                        "rule": note,
+                        "bonus": bonus,
+                        "primary_matched": sorted(primary_matched),
+                        "type": "absence",
+                        "absent_tag": "confirmed_ppe",
+                    })
+            else:
+                secondary_matched = tags.intersection(secondary)
+                if secondary_matched:
+                    score += bonus
+                    triggered_rules.append(f"{note} (+{bonus})")
+                    rule_details.append({
+                        "rule": note,
+                        "bonus": bonus,
+                        "primary_matched": sorted(primary_matched),
+                        "secondary_matched": sorted(secondary_matched),
+                        "type": "presence",
+                    })
 
     # Determine level
     level = "green"
@@ -233,30 +291,91 @@ def evaluate(tags: Set[str]) -> Dict:
         "level_label": LEVEL_LABELS.get(level, ""),
         "reasons": reasons,
         "triggered_rules": triggered_rules,
+        "rule_details": rule_details,
     }
+
+
+def format_markdown(result: Dict) -> str:
+    """Format result as markdown."""
+    lines = [
+        f"## Risk Assessment: {result['level'].upper()}",
+        f"**Score:** {result['score']} — {result['level_label']}",
+        "",
+    ]
+    if result["reasons"]:
+        lines.append("### Factor Breakdown")
+        for r in result["reasons"]:
+            lines.append(f"- {r}")
+        lines.append("")
+    if result["triggered_rules"]:
+        lines.append("### Compound Rules Triggered")
+        for r in result["triggered_rules"]:
+            lines.append(f"- {r}")
+        lines.append("")
+    return "\n".join(lines)
+
+
+def format_plain(result: Dict) -> str:
+    """Format result as plain text."""
+    lines = [
+        f"Level: {result['level'].upper()}",
+        f"Score: {result['score']} — {result['level_label']}",
+    ]
+    if result["reasons"]:
+        lines.append("Factors:")
+        for r in result["reasons"]:
+            lines.append(f"  {r}")
+    if result["triggered_rules"]:
+        lines.append("Compound rules:")
+        for r in result["triggered_rules"]:
+            lines.append(f"  {r}")
+    return "\n".join(lines)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Risk Guard Engine")
-    parser.add_argument("--input", required=True, help="Path to case JSON file")
+    parser.add_argument("--input", help="Path to case JSON file")
+    parser.add_argument("--stdin", action="store_true", help="Read case JSON from stdin")
     parser.add_argument("--verbose", "-v", action="store_true", help="Show detailed breakdown")
+    parser.add_argument("--format", choices=["json", "markdown", "plain"], default="json",
+                        help="Output format (default: json)")
     args = parser.parse_args()
 
-    path = Path(args.input)
-    if not path.exists():
-        print(f"Error: file not found: {path}", file=sys.stderr)
-        sys.exit(1)
+    if not args.input and not args.stdin:
+        parser.error("Either --input or --stdin is required")
 
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as e:
-        print(f"Error: invalid JSON in {path}: {e}", file=sys.stderr)
-        sys.exit(1)
+    if args.stdin:
+        raw = sys.stdin.read()
+        try:
+            data = json.loads(raw)
+        except json.JSONDecodeError as e:
+            print(f"Error: invalid JSON from stdin: {e}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        path = Path(args.input)
+        if not path.exists():
+            print(f"Error: file not found: {path}", file=sys.stderr)
+            sys.exit(1)
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as e:
+            print(f"Error: invalid JSON in {path}: {e}", file=sys.stderr)
+            sys.exit(1)
 
-    tags = normalize_case(data)
+    tags, warnings = normalize_case(data)
     result = evaluate(tags)
 
-    print(json.dumps(result, ensure_ascii=False, indent=2))
+    # Add warnings to result
+    if warnings:
+        result["warnings"] = warnings
+
+    # Output in requested format
+    if args.format == "json":
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+    elif args.format == "markdown":
+        print(format_markdown(result))
+    else:
+        print(format_plain(result))
 
     if args.verbose:
         print(f"\n--- Detailed Breakdown ---")
@@ -267,6 +386,10 @@ def main() -> None:
             print(f"\nCompound rules triggered:")
             for rule in result["triggered_rules"]:
                 print(f"  • {rule}")
+        if warnings:
+            print(f"\nWarnings:")
+            for w in warnings:
+                print(f"  ⚠ {w}")
 
 
 if __name__ == "__main__":

@@ -177,3 +177,31 @@ overestimated — the rational choice is often to act, with guardrails.
 
 **Recommended flow:** Pre-mortem → Red Team → Fear Setting
 (Structural → Adversarial → Personal)
+
+---
+
+## Kill Assumption (致命假设)
+
+After completing the three methods above, identify the **single assumption whose
+failure would reverse the entire assessment.** This is the "kill assumption" —
+the one linchpin that, if wrong, collapses the entire risk picture.
+
+### How to Find It
+
+1. Review all failure narratives from the pre-mortem
+2. Review all challenged assumptions from the red team
+3. Review all specific fears from fear setting
+4. Ask: "Which ONE assumption, if proven wrong, would change the decision from
+   green/yellow to orange/red — or from red to green?"
+
+### What Makes a Good Kill Assumption
+
+- It's specific, not vague ("the migration script completes within 4 hours" not "things go well")
+- Its truth is verifiable before or during execution, not only after
+- Getting it wrong has outsized consequences compared to other assumptions
+
+### Output Format
+
+**Kill assumption:** [the single assumption whose failure reverses the conclusion]
+**How to verify:** [specific test or observation that confirms or denies it]
+**If wrong:** [what changes about the decision]

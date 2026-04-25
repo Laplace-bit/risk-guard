@@ -135,7 +135,17 @@ Ask your agent: *"Tell me about your risk-guard skill"* — it should describe b
 The included Python risk engine provides structured scoring for Quick Review:
 
 ```bash
+# From file
 python scripts/risk_engine.py --input case.json
+
+# From stdin
+echo '{"vulnerability_tags":["pregnancy"],"exposure_tags":["chemical"]}' | python scripts/risk_engine.py --stdin
+
+# Output formats
+python scripts/risk_engine.py --input case.json --format json       # default
+python scripts/risk_engine.py --input case.json --format markdown   # markdown
+python scripts/risk_engine.py --input case.json --format plain      # plain text
+python scripts/risk_engine.py --input case.json --verbose            # detailed breakdown
 ```
 
 Example case:
@@ -171,6 +181,15 @@ Output:
   ],
   "triggered_rules": [
     "pregnancy-sensitive vulnerability combined with hazardous exposure (+8)"
+  ],
+  "rule_details": [
+    {
+      "rule": "pregnancy-sensitive vulnerability combined with hazardous exposure",
+      "bonus": 8,
+      "primary_matched": ["possible_pregnancy"],
+      "secondary_matched": ["chemical", "heat", "long_walking"],
+      "type": "presence"
+    }
   ]
 }
 ```
@@ -189,7 +208,7 @@ risk-guard/
 ├── CLAUDE.md                         # Claude Code context reference
 ├── GEMINI.md                         # Gemini context reference
 ├── package.json                       # Package metadata
-├── LICENSE                            # Apache 2.0 License
+├── LICENSE                            # MIT License
 ├── README.md                          # This file
 ├── agents/
 │   └── risk-reviewer.md              # Agent persona for deep safety review
@@ -272,6 +291,7 @@ risk-guard/
 6. **Minimal questions** — Only ask what could change the recommendation
 7. **Scientifically grounded** — Every phase has peer-reviewed cognitive science research behind it
 8. **No medical/legal conclusions** — Risk reasoning and precautionary guidance only
+9. **Kill assumption discipline** — After pre-mortem, identify the single assumption whose failure would reverse the entire assessment
 
 ## Contributing
 
@@ -279,4 +299,4 @@ Contributions are welcome! Please read the skill content carefully before submit
 
 ## License
 
-Apache 2.0
+MIT
