@@ -302,17 +302,19 @@ Consult `references/resilience-building.md` for:
 - User asks: "风险评估" / "安全审查" / "安不安全" → Quick Review
 - User asks: "帮我想想周全一点" / "有什么没想到的" / "全面分析一下" → Full Review
 - User describes a multi-step plan about to execute with real consequences
+- **出行/外出/旅行/出差/户外活动等场景的准备或计划**（如"明天去XX"、"周末出去玩"、"准备出差"、"要约人见面"）——这类场景常遗漏天气、交通、证件、安全等因素，即使描述简短也应触发
 - A reasonable person would proactively seek a safety review
 
 ### ❌ Do NOT Trigger For
 - Simple single-step actions ("帮我改这个文件")
 - Information queries ("这个API怎么用")
-- Casual conversation
+- Casual conversation or already-completed action retrospectives ("我昨天去了XX")
 - General advice without specific planned action
+- Everyday offhand remarks with no preparation or stakes ("我下楼买个咖啡")
 - Code debugging (→ systematic-debugging)
 - When user just wants a quick answer, not thorough analysis
 
-**Trigger heuristic:** Only activate when (a) user explicitly asks for risk/thorough analysis, OR (b) a multi-step plan with real stakes is about to execute. When in doubt, don't trigger — false negatives are preferable to interrupting normal AI usage.
+**Trigger heuristic:** Only activate when (a) user explicitly asks for risk/thorough analysis, OR (b) a multi-step plan with real stakes is about to execute, OR (c) travel/outing/travel/business trip/outdoor activity preparation. When in doubt, don't trigger — false negatives are preferable to interrupting normal AI usage.
 
 ---
 
