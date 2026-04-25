@@ -46,15 +46,19 @@ If unclear, ask: "需要全面分析还是只看安全问题？"
 
 Map to scenario groups in `./references/scenario-map.md`.
 
-### Step 2: Gather
+### Step 2: Run Checklist
+
+Run the matching safety checklist from `./references/checklists.md`. This catches known risks before deeper analysis.
+
+### Step 3: Gather
 
 Verify facts independently (weather, route conditions, venue safety, news). Don't ask the user what you can find yourself.
 
-### Step 3: Ask
+### Step 4: Ask
 
 At most 4 high-value questions per round. Only ask what could change the recommendation. Consult `./references/question-bank.md`.
 
-### Step 4: Model
+### Step 5: Model
 
 Assess across 7 dimensions:
 
@@ -68,7 +72,7 @@ Assess across 7 dimensions:
 | Reversibility | How bad is the outcome if it happens? |
 | Uncertainty | How much critical information is missing? |
 
-### Step 5: Run Risk Engine (optional)
+### Step 6: Run Risk Engine (optional)
 
 For complex cases with 6+ factors or multiple scenario groups:
 
@@ -78,7 +82,7 @@ python scripts/risk_engine.py --input case.json
 
 Schema: `./references/risk-engine-schema.md`
 
-### Step 6: Output
+### Step 7: Output
 
 Follow the Quick Review output format in `./references/output-examples.md`.
 
