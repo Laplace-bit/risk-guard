@@ -1,5 +1,40 @@
 # Release Notes
 
+## v2.1.0 (2026-04-25)
+
+### What's New
+
+**18 safety scenario checklists** — The PRIMARY checklists are now organized around real-life risk scenarios, not just technical operations:
+- ✈️ Travel & mobility, 👤 Stranger meeting, 💰 Transaction & payment
+- 🏕️ Outdoor & environment, 🌙 Nightlife & isolated time, 🏥 Health-sensitive activity
+- 👶 Caregiving & dependent, 🏠 Housing & property, 💻 Digital fraud & phishing
+- 🏢 Business trip, 🌐 Online-to-offline
+- 🏭 Workplace & site visit, 💼 Job interview & onboarding
+- 🏥 Medical visit & decision, 🌊 Natural disaster response
+- 🏠 Home & family safety, 🤝 Job scam & exploitation
+- 🏋️ Sports & fitness, 🔧 Home service & renovation
+
+**20 scenario groups** (was 12) — New: workplace visit, job interview, medical decision, natural disaster, home safety, job scam, sports & fitness, home service.
+
+**10 new risk tags** — `extreme_exertion`, `altitude`, `deep_water`, `construction_hazard`, `formaldehyde_fumes`, `unverified_organization`, `upfront_fee_required`, `document_confiscation`, `movement_restriction` + 5 new safeguards.
+
+**4 new compound rules** — Document confiscation + movement restriction (trafficking signal), upfront fee + unverified org (scam pattern), extreme exertion + hazardous environment, formaldehyde + vulnerable person.
+
+**SKILL.md restructured** — Slimmed from 363 → 170 lines following superpowers skill pattern:
+- Iron Law: "NO PLAN EXECUTION WITHOUT RISK REVIEW WHEN STAKES ARE REAL"
+- Red Flags table (7 rationalization patterns and their reality)
+- Kill Assumption step added after Phase 3
+- Progressive disclosure: output formats and detailed tables moved to references
+- Trigger-only description for better activation
+
+**Risk engine v2.1** — `--stdin` flag, `--format` (json/markdown/plain), `scenario_tags` base weighting, unknown tag warnings, `free_text` warning, compound rule trigger details.
+
+**43 tests** (was 21) — New tests for v2.1 tags, compound rules, stdin, format, error paths, boundary values, absence rules.
+
+**Bug fixes** — License unified to MIT (was inconsistent), Cursor plugin skills path fixed, OpenCode version pin fixed.
+
+---
+
 ## v2.0.2 (2026-04-24)
 
 ### What's New
