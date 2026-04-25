@@ -96,6 +96,11 @@ python scripts/risk_engine.py --input case.json --format plain      # plain text
 | alcohol | 2 | Alcohol involvement |
 | non_reversible_payment | 6 | Payment cannot be reversed |
 | document_handover | 4 | Sensitive documents being handed over |
+| extreme_exertion | 3 | Intense physical activity beyond normal capacity |
+| altitude | 3 | High altitude exposure |
+| deep_water | 4 | Open water or deep water activity |
+| construction_hazard | 4 | Active construction or renovation site |
+| formaldehyde_fumes | 4 | Renovation off-gassing or chemical fumes in living space |
 
 ### Counterparty Tags
 | Tag | Weight | Description |
@@ -105,6 +110,10 @@ python scripts/risk_engine.py --input case.json --format plain      # plain text
 | urgency | 4 | Time pressure applied |
 | secrecy | 5 | Request for secrecy or discretion |
 | identity_mismatch | 5 | Identity doesn't match expectations |
+| unverified_organization | 4 | Company or organization not independently verified |
+| upfront_fee_required | 5 | Demanding payment before service is rendered |
+| document_confiscation | 6 | Taking ID, bank card, or phone — trafficking signal |
+| movement_restriction | 6 | Limiting ability to leave or communicate |
 
 ### Constraint Tags
 | Tag | Weight | Description |
@@ -169,6 +178,38 @@ python scripts/risk_engine.py --input case.json --format plain      # plain text
 | feature_flags | -2 | Feature flags or kill switch available for rollback |
 | gradual_rollout | -2 | Canary / staged rollout plan in place |
 | belief_update_signals | -1 | Defined thresholds for plan revision |
+
+### Life/Work Safety Tags (v2.1 — everyday risk scenarios)
+| Tag | Weight | Description |
+|-----|--------|-------------|
+| second_medical_opinion | -3 | Got a second medical opinion before decision |
+| written_contract | -2 | Have a written, reviewed contract |
+| safety_briefing_received | -2 | Received site safety orientation or briefing |
+| emergency_kit_ready | -1 | Emergency supplies prepared (water, food, first aid, flashlight) |
+| home_alarm_or_monitoring | -1 | Home security system active |
+
+### Scenario Tags (base weights, +1 or +2)
+| Tag | Weight | Description |
+|-----|--------|-------------|
+| travel_and_mobility | 1 | Flights, trains, taxis, driving, rideshare |
+| workplace_or_site_visit | 2 | Plant, lab, construction site, warehouse |
+| health_sensitive_activity | 2 | Pregnancy, post-op, chronic illness |
+| stranger_interaction_or_relationship_meeting | 2 | Dates, online contacts, private interviews |
+| housing_or_property_viewing | 1 | Rentals, viewings, sublets |
+| transaction_payment_or_asset_transfer | 2 | Deposits, wire transfers, crypto |
+| caregiving_or_dependent_protection | 1 | Children, elders, disability support |
+| outdoor_or_environmental_exposure | 1 | Hiking, camping, boating, beaches |
+| nightlife_or_isolated_time_movement | 2 | Late trains, bars, clubs, early departures |
+| online_to_offline_conversion | 2 | Moving online conversation to real-world meeting |
+| business_trip_or_multi_day_travel | 1 | Work trips, conferences, multi-day travel |
+| digital_fraud_scam_or_phishing_risk | 2 | Suspicious links, phishing, romance scams |
+| job_interview_or_onboarding | 1 | Job interviews, trial work, recruitment |
+| medical_visit_or_decision | 2 | Surgery decisions, treatment plans, hospital choices |
+| natural_disaster_response | 2 | Typhoon, earthquake, flood, wildfire warning |
+| home_and_family_safety | 1 | Elderly alone, child safety, home security |
+| job_scam_or_exploitation | 2 | Suspicious offers, MLM, upfront fee scams |
+| sports_and_fitness_activity | 1 | New exercise, extreme sports, marathon |
+| home_service_or_renovation | 1 | Hiring workers, renovation, cleaning service |
 
 ### Anticipatory Safeguard Tags (v2.0 — reduce pre-mortem/coupling risk)
 | Tag | Weight | Description |

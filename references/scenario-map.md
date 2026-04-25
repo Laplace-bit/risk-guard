@@ -85,3 +85,59 @@ Triggers:
 
 High-signal factors:
 - Urgency or threats, requests for money or credentials, identity inconsistencies, pressure to act now, unusual payment methods, grammar errors combined with urgency, unsolicited contact, too-good-to-be-true returns
+
+## 13. Workplace or site visit
+Triggers:
+- Factory, plant, construction site, laboratory, warehouse, field inspection, client site visit
+
+High-signal factors:
+- Chemicals, fumes, dust, noise, heat, radiation, biological agents, ladders, long walking, PPE uncertainty, emergency access limits, lack of safety briefing, no escort
+
+## 14. Job interview or onboarding
+Triggers:
+- Job interviews, trial work days, orientation at unfamiliar locations, remote job offers, recruitment meetings
+
+High-signal factors:
+- Unverified company, private residential interview location, requests for money or documents, pressure to decide immediately, unclear job description, no written offer,扣押证件
+
+## 15. Medical visit or decision
+Triggers:
+- Surgery decisions, hospital choices, treatment plan reviews, second opinion seeking, dental procedures, diagnostic tests with significant risk
+
+High-signal factors:
+- No second opinion, unclear risk explanation, pressure to decide now, unverified facility, hidden costs, no post-procedure care plan, inability to switch providers
+
+## 16. Natural disaster response
+Triggers:
+- Typhoon, earthquake, flood, wildfire, extreme heat/cold warning, tsunami alert, evacuation order
+
+High-signal factors:
+- Evacuation needed, vulnerable people present, communication disruption, no emergency supplies, lack of transportation, being in the disaster zone unnecessarily
+
+## 17. Home and family safety
+Triggers:
+- Elderly living alone, child home safety, hiring domestic help, gas/electrical work, fire risk, burglary concern
+
+High-signal factors:
+- Vulnerable person alone, unverified home service worker, gas/appliance issues, no smoke detectors, medication access, stranger access to home
+
+## 18. Job scam or exploitation
+Triggers:
+- Suspicious job offers, multi-level marketing recruitment, unpaid trial work, requests for upfront fees,扣押身份证/银行卡, work that limits personal freedom
+
+High-signal factors:
+- Upfront payment required, no written contract, vague job description, far-above-market salary, restricted movement or communication, identity document confiscation
+
+## 19. Sports and fitness activity
+Triggers:
+- New exercise program, extreme sports, high-altitude trekking, open water swimming, hot yoga, marathon, CrossFit, bungee jumping, scuba diving
+
+High-signal factors:
+- No warmup, no coach/supervisor, extreme environment (heat, cold, altitude, depth), underlying health condition, no emergency plan, pushing beyond current ability
+
+## 20. Home service or renovation
+Triggers:
+- Hiring plumber, electrician, cleaner, mover, renovation crew; any stranger entering your home for work
+
+High-signal factors:
+- Unverified worker, being home alone with stranger, no written quote, full upfront payment, construction materials safety (formaldehyde, dust), no warranty, valuables accessible

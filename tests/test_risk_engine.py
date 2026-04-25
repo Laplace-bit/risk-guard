@@ -644,6 +644,127 @@ def test_ppe_absence_rule_triggered():
         f"Expected PPE absence rule, got: {without_ppe['triggered_rules']}"
 
 
+# ── v2.1 life/work safety tests ──
+
+
+def test_document_confiscation_compound():
+    """document_confiscation + movement_restriction should trigger trafficking signal."""
+    result = run_engine({
+        "scenario_tags": ["job_scam_or_exploitation"],
+        "vulnerability_tags": [],
+        "exposure_tags": [],
+        "counterparty_tags": ["document_confiscation", "movement_restriction"],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["level"] in ("orange", "red"), f"Expected orange/red, got {result['level']} (score {result['score']})"
+    assert any("confiscation" in r.lower() or "trafficking" in r.lower() or "movement" in r.lower()
+               for r in result["triggered_rules"]), \
+        f"Expected document confiscation compound rule, got: {result['triggered_rules']}"
+
+
+def test_upfront_fee_scam_compound():
+    """upfront_fee_required + unverified_organization should trigger scam compound."""
+    result = run_engine({
+        "scenario_tags": ["job_scam_or_exploitation"],
+        "vulnerability_tags": [],
+        "exposure_tags": [],
+        "counterparty_tags": ["upfront_fee_required", "unverified_organization"],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["score"] > 0, "Expected non-zero score for upfront fee + unverified org"
+    assert any("fee" in r.lower() or "scam" in r.lower() or "unverified" in r.lower()
+               for r in result["triggered_rules"]), \
+        f"Expected upfront fee scam compound, got: {result['triggered_rules']}"
+
+
+def test_extreme_exertion_compound():
+    """extreme_exertion + heat should trigger environmental exertion compound."""
+    result = run_engine({
+        "scenario_tags": ["sports_and_fitness_activity"],
+        "vulnerability_tags": [],
+        "exposure_tags": ["extreme_exertion", "heat"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["score"] > 0, "Expected non-zero score for extreme exertion + heat"
+    assert any("exertion" in r.lower() or "environmental" in r.lower() or "hazardous" in r.lower()
+               for r in result["triggered_rules"]), \
+        f"Expected exertion compound, got: {result['triggered_rules']}"
+
+
+def test_formaldehyde_pregnancy_compound():
+    """formaldehyde_fumes + pregnancy should trigger vulnerable person exposure compound."""
+    result = run_engine({
+        "scenario_tags": ["home_service_or_renovation"],
+        "vulnerability_tags": ["pregnancy"],
+        "exposure_tags": ["formaldehyde_fumes"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["level"] in ("orange", "red"), f"Expected orange/red, got {result['level']}"
+    assert any("fumes" in r.lower() or "vulnerable" in r.lower() or "off-gassing" in r.lower()
+               for r in result["triggered_rules"]), \
+        f"Expected formaldehyde + vulnerability compound, got: {result['triggered_rules']}"
+
+
+def test_construction_ppe_absence():
+    """construction_hazard without confirmed_ppe should trigger PPE absence rule."""
+    result = run_engine({
+        "scenario_tags": ["workplace_or_site_visit"],
+        "vulnerability_tags": [],
+        "exposure_tags": ["construction_hazard"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert any("ppe" in r.lower() or "unconfirmed" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected PPE absence rule for construction, got: {result['triggered_rules']}"
+
+
+def test_new_safeguards_reduce_score():
+    """New v2.1 safeguards should reduce risk score."""
+    base = {
+        "scenario_tags": ["job_scam_or_exploitation"],
+        "vulnerability_tags": [],
+        "exposure_tags": [],
+        "counterparty_tags": ["upfront_fee_required", "unverified_organization"],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    }
+    with_safeguards = {
+        **base,
+        "safeguard_tags": ["written_contract", "verified_organization"],
+    }
+    score_base = run_engine(base)["score"]
+    score_safe = run_engine(with_safeguards)["score"]
+    assert score_safe < score_base, \
+        f"New safeguards should reduce score: {score_safe} >= {score_base}"
+
+
+def test_new_scenario_tags_weight():
+    """New v2.1 scenario tags should contribute base weight."""
+    base = {
+        "scenario_tags": [],
+        "vulnerability_tags": [],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    }
+    with_medical = {
+        **base,
+        "scenario_tags": ["medical_visit_or_decision"],
+    }
+    score_base = run_engine(base)["score"]
+    score_medical = run_engine(with_medical)["score"]
+    assert score_medical > score_base, \
+        f"Medical scenario tag should increase score: {score_medical} <= {score_base}"
+
+
 if __name__ == "__main__":
     tests = [
         # Original tests
@@ -663,6 +784,11 @@ if __name__ == "__main__":
         test_stdin_input, test_format_markdown, test_format_plain,
         test_invalid_json_error, test_missing_file_error, test_no_input_or_stdin_error,
         test_boundary_score_green_yellow, test_empty_tags_list, test_ppe_absence_rule_triggered,
+        # v2.1 life/work safety tests
+        test_document_confiscation_compound, test_upfront_fee_scam_compound,
+        test_extreme_exertion_compound, test_formaldehyde_pregnancy_compound,
+        test_construction_ppe_absence, test_new_safeguards_reduce_score,
+        test_new_scenario_tags_weight,
     ]
     for t in tests:
         t()

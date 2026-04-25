@@ -48,12 +48,23 @@ WEIGHTS: Dict[str, int] = {
     "alcohol": 2,
     "non_reversible_payment": 6,
     "document_handover": 4,
+    # new exposures (v2.1)
+    "extreme_exertion": 3,         # Intense physical activity beyond normal
+    "altitude": 3,                 # High altitude exposure
+    "deep_water": 4,               # Open water or deep water activity
+    "construction_hazard": 4,      # Active construction or renovation site
+    "formaldehyde_fumes": 4,       # Renovation off-gassing
     # counterparty
     "unverified_stranger": 4,
     "pressure": 4,
     "urgency": 4,
     "secrecy": 5,
     "identity_mismatch": 5,
+    # new counterparty tags (v2.1)
+    "unverified_organization": 4,    # Company not independently verified
+    "upfront_fee_required": 5,      # Demanding payment before service
+    "document_confiscation": 6,      # Taking ID, bank card, phone
+    "movement_restriction": 6,       # Limiting ability to leave
     # constraints
     "cannot_exit_freely": 7,
     "poor_medical_access": 4,
@@ -97,6 +108,12 @@ WEIGHTS: Dict[str, int] = {
     "checked_weather": -2,
     "travel_insurance": -2,
     "verified_organization": -3,
+    # new safeguards (v2.1)
+    "second_medical_opinion": -3,    # Got a second medical opinion
+    "written_contract": -2,           # Have a written, reviewed contract
+    "safety_briefing_received": -2,  # Received site safety orientation
+    "emergency_kit_ready": -1,       # Emergency supplies prepared
+    "home_alarm_or_monitoring": -1,  # Home security system active
     # anticipatory safeguards (v2.0)
     "rollback_tested": -3,
     "feature_flags": -2,
@@ -113,7 +130,7 @@ WEIGHTS: Dict[str, int] = {
 # Scenario base weights: each scenario classification adds a small baseline risk
 SCENARIO_WEIGHTS: Dict[str, int] = {
     "travel_and_mobility": 1,
-    "workplace_or_site_visit": 1,
+    "workplace_or_site_visit": 2,
     "health_sensitive_activity": 2,
     "stranger_interaction_or_relationship_meeting": 2,
     "housing_or_property_viewing": 1,
@@ -124,6 +141,13 @@ SCENARIO_WEIGHTS: Dict[str, int] = {
     "online_to_offline_conversion": 2,
     "business_trip_or_multi_day_travel": 1,
     "digital_fraud_scam_or_phishing_risk": 2,
+    "job_interview_or_onboarding": 1,
+    "medical_visit_or_decision": 2,
+    "natural_disaster_response": 2,
+    "home_and_family_safety": 1,
+    "job_scam_or_exploitation": 2,
+    "sports_and_fitness_activity": 1,
+    "home_service_or_renovation": 1,
 }
 
 # ──────────────────────────────────────────────────────────────
@@ -168,6 +192,17 @@ COMPOUND_RULES: List[Tuple[Set[str], Set[str], int, str]] = [
      "planning fallacy with zero slack — schedule will definitely slip"),
     ({"overconfidence"}, {"unvalidated_assumption", "single_point_of_failure"}, 5,
      "overconfidence hiding unvalidated assumptions at a single failure point"),
+    # v2.1 life/work safety rules
+    ({"document_confiscation"}, {"movement_restriction"}, 8,
+     "document confiscation combined with movement restriction — trafficking or forced labor signal"),
+    ({"upfront_fee_required"}, {"unverified_organization", "unverified_stranger"}, 7,
+     "upfront fee required by unverified party — common scam pattern"),
+    ({"extreme_exertion"}, {"heat", "altitude", "deep_water"}, 5,
+     "intense physical activity in hazardous environmental conditions"),
+    ({"construction_hazard"}, {"confirmed_ppe"}, 4,
+     "construction or renovation hazard with unconfirmed PPE"),
+    ({"formaldehyde_fumes"}, {"pregnancy", "possible_pregnancy", "child"}, 6,
+     "renovation off-gassing exposure with vulnerable person present"),
 ]
 
 # ──────────────────────────────────────────────────────────────
