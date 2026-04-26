@@ -1,11 +1,13 @@
 ---
-description: "Run a quick safety review on a described action"
+description: "快速安全提醒：对描述的计划进行风险评估，给出简洁可操作的建议"
 ---
 
-Run a quick safety review on a described action using the risk-guard skill.
+快速安全审查。识别场景，标记关键风险，给出具体建议。
 
-The agent will classify the scenario, ask follow-up questions if needed, and produce a structured go/no-go judgment with a risk level (green/yellow/orange/red).
+适用：出行安全、见陌生人、交易、户外活动、就医决定等。
 
-Best for: travel safety, meeting strangers, transactions, hazardous activities.
+示例：`/risk-guard check "我下周要去呼和浩特出差三天"`
 
-Example: `/risk-guard check "I'm meeting a stranger from the internet tonight at a bar near the highway"`
+输出格式：1-3个关键风险 + 1条具体建议 + 1个关键问题（如果信息不足）。不超过5句话。
+
+如果风险较高或用户追问，引导使用 `analyze` 进行深度分析。

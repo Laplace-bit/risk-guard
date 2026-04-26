@@ -1,8 +1,8 @@
 {
   "name": "risk-guard",
   "displayName": "Risk Guard",
-  "description": "Help people think more thoroughly and avoid unexpected failures. Two modes: Quick Review (safety check for travel/meetings/transactions) and Full 6-Phase Review (checklists, inversion, pre-mortem, stress test, scenario planning, resilience design).",
-  "version": "2.1.0",
+  "description": "Proactively flags safety, health, financial, and personal risks when users describe real-world plans. Three-layer progressive disclosure: quick reminder → scenario checklists → deep 6-phase analysis.",
+  "version": "3.0.0",
   "author": {
     "name": "dzlin"
   },
@@ -13,14 +13,12 @@
     "risk",
     "safety",
     "risk-assessment",
-    "pre-mortem",
-    "anticipatory-thinking",
     "checklist",
     "scenario-planning",
     "resilience",
-    "antifragile",
+    "decision-support",
     "cognitive-debiasing",
-    "decision-support"
+    "anticipatory-thinking"
   ],
   "skills": "./",
   "agents": "./agents/",

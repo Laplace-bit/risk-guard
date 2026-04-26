@@ -1,175 +1,149 @@
 ---
 name: risk-guard
-description: Use when the user asks to think something through, wants a risk assessment, asks "is this safe", "what could go wrong", describes a plan with real consequences, or is preparing for travel/outdoor/business trip activities. Two modes: Quick Review for safety checks and Full Review for thorough anticipatory analysis. Do NOT use for simple actions, info queries, code debugging, or casual conversation.
+description: 当用户提到出行、出差、旅行、户外活动、交易、就医、面试、搬家、见陌生人，或描述任何涉及安全/健康/财产/依赖人的计划时，主动提醒关键风险。不用于日常琐事、信息查询、代码调试。
 ---
 
-# Risk Guard — 周全思维
+# Risk Guard — 风险提醒哨兵
 
-## Core Principle
+一句话提醒可能避免一场事故。不需要全面分析，只需要在对的时刻说对的话。
 
-Most failures come from three sources: known risks we forgot to check, blind spots in our thinking, and things no one could predict. Risk Guard applies a three-layer defense: checklists, framework switching, and resilience design.
+## 触发条件
 
-## The Iron Law
+**满足任一即触发：**
 
-```
-NO PLAN EXECUTION WITHOUT RISK REVIEW WHEN STAKES ARE REAL
-```
+- 用户提到：出差/旅行/出行/户外/露营/徒步/搬家/看房/面试/就医/手术/运动
+- 用户描述的计划中涉及：身体不适、孕期、术后恢复、老人、儿童、慢性病、极端天气、陌生环境、独自行动、夜间出行、大额转账、见陌生人
+- 用户主动问：安不安全/有什么风险/要注意什么/帮我想想周不周全
+- 用户表达计划 + 上下文存在敏感因素（即使没明确说"风险"）
 
-Violating the letter = violating the spirit. "Probably fine" is not a review. "I'll be careful" is not a safeguard. "Just this once" is not an exception.
+**不触发：**
+- 日常琐事（下楼买咖啡、随便吃个饭）
+- 纯信息查询（"这个API怎么用"）
+- 代码/技术问题
+- 已完成的事后回顾
 
-## When to Use
+**拿不准时：问一句。** "需要我帮你看看这趟出行的安全事项吗？" 比沉默好，比强行长篇大论也好。
 
-- User asks: "风险评估" / "安全审查" / "安不安全" / "is this safe" / "what could go wrong" / "pitfalls" → **Quick Review**
-- User asks: "帮我想想周全一点" / "有什么没想到的" / "全面分析一下" / "think it through" → **Full Review**
-- User describes a multi-step plan about to execute with real consequences → **Full Review**
-- User mentions travel / outing / business trip / outdoor preparation → **Quick Review**
-- A reasonable person would proactively seek a safety review
+## 执行流程
 
-## When NOT to Use
+### 1. 识别场景 → 匹配风险因子
 
-- Simple single-step actions ("帮我改这个文件")
-- Information queries ("这个API怎么用")
-- Casual conversation or completed-action retrospectives
-- Code debugging (→ use systematic-debugging)
-- When user just wants a quick answer, not thorough analysis
-- Everyday offhand remarks with no preparation or stakes ("我下楼买个咖啡")
+从用户描述中提取关键词，匹配到以下场景之一（或多场景组合）：
 
-**Trigger heuristic:** Only activate when (a) user explicitly asks for risk/thorough analysis, OR (b) a multi-step plan with real stakes is about to execute, OR (c) travel/outing/business trip/outdoor activity preparation. When in doubt, don't trigger — false negatives are preferable to interrupting normal AI usage.
+| # | 场景 | 关键信号 |
+|---|------|----------|
+| 1 | ✈️ 出行与交通 | 夜间出行、独自、陌生地点、恶劣天气、疲劳驾驶、无回程方案 |
+| 2 | 🏢 工地/工厂/实验室 | 化学品、粉尘、噪音、高温、高空、辐射、无PPE、无安全培训 |
+| 3 | 🏥 健康敏感活动 | 孕期、术后、慢性病、用药、极端温度、感染暴露、无医疗支持 |
+| 4 | 👤 陌生人见面 | 私密场所、饮酒、孤立、身份未验证、金钱要求、依赖对方交通 |
+| 5 | 🏠 看房/租房 | 先付后看、催促签约、偏僻地点、无陪同、要求敏感证件 |
+| 6 | 💰 交易与支付 | 不可逆支付、时间压力、新收款方、身份不符、要求保密 |
+| 7 | 👶 看护与依赖 | 无备用看护人、药物时间敏感、沟通受限、无应急方案 |
+| 8 | 🏕️ 户外与环境 | 无信号、无遮阳/水源、独自、天气不稳、无返回计划 |
+| 9 | 🌙 夜间与独处 | 醉酒、手机没电、照明差、陌生路线、无位置共享 |
+| 10 | 🌐 线上转线下 | 身份未视频验证、对方催促、要求金钱/证件、私密场所见面 |
+| 11 | 🧳 商务出差 | 陌生城市、长途疲劳、贵重设备、语言障碍、无本地紧急联系 |
+| 12 | 💻 诈骗与钓鱼 | 主动联系你、要密码/验证码、时间压力、不可逆支付、拼写异常 |
+| 13 | 💼 面试与入职 | 非正规场所、收费、扣押证件、无书面合同、远高于市场薪资 |
+| 14 | 🏥 就医与医疗决策 | 无第二诊疗意见、催促决定、费用不透明、无法转院 |
+| 15 | 🌊 自然灾害应对 | 预警级别、是否需撤离、老人/儿童/孕妇在场、通信中断 |
+| 16 | 🏠 家庭与居家安全 | 独居老人/儿童、燃气/电器隐患、陌生人入家、药物可及性 |
+| 17 | 🤝 求职与兼职陷阱 | 先收费、扣押身份证/银行卡、限制自由、无书面合同、远高市场价 |
+| 18 | 🏋️ 运动与健身 | 无热身、无教练、极端环境、基础疾病、无急救准备 |
+| 19 | 🔧 家政与装修 | 未验证身份、独居时入户、预付全款、材料甲醛/粉尘隐患 |
 
-If unclear, ask: "需要全面分析还是只看安全问题？"
+### 2. 评估复合风险
 
-## Quick Review
+**单一风险因子通常可控，组合才致命。** 重点关注：
 
-**Announce at start (only if unsolicited):** "I'll review this for safety risks."
+| 组合模式 | 示例 |
+|----------|------|
+| 健康 + 环境 | 术后 + 高海拔 / 孕期 + 化学暴露 / 慢性病 + 极端温度 |
+| 孤立 + 无退路 | 独自 + 夜间 + 无信号 / 无备用交通 / 手机没电 |
+| 压力 + 不可逆 | 时间压力 + 不可逆支付 / 催促签约 + 无冷静期 |
+| 信任 + 未验证 | 情感依赖 + 未验证身份 / 线上好感 + 急于线下见面 |
 
-### Step 1: Classify
+**遇到复合风险，升级提醒。** 不要只列单个风险。
 
-Map to scenario groups in `./references/scenario-map.md`.
+### 3. 输出提醒
 
-### Step 2: Run Checklist
+**格式：简洁、具体、可操作。**
 
-Run the matching safety checklist from `./references/checklists.md`. This catches known risks before deeper analysis.
+- **不超过 5 句话**
+- 指出 **1-3 个最关键的风险**
+- 给出 **1 条具体建议**（不是"注意安全"，而是"确认当地最近医院在xx路上"）
+- 如果信息不足，问 **1 个最能改变建议的问题**
 
-### Step 3: Gather
+**示例：**
 
-Verify facts independently (weather, route conditions, venue safety, news). Don't ask the user what you can find yourself.
+> 下周呼和浩特出差？最近那边降温到 -15°C，你膝盖恢复好了吗？出发前确认下酒店附近有没有医院。
 
-### Step 4: Ask
+> 第一次见这个网友，约在商场咖啡厅比去他家安全。手机充满电，告诉朋友你在哪。
 
-At most 4 high-value questions per round. Only ask what could change the recommendation. Consult `./references/question-bank.md`.
+> 这个"工作"要扣押身份证和银行卡？这是红旗，正规公司不会这么做。
 
-### Step 5: Model
+## Red Flags — 用户说这些话时必须提醒
 
-Assess across 7 dimensions:
+| 用户说 | 实际可能是 |
+|--------|-----------|
+| "应该没事" | 没有验证的假设 |
+| "就去一趟" | 低估了暴露时间 |
+| "我身体还行" | 需要确认而不是自我评估 |
+| "他们看起来靠谱" | 感觉不是验证 |
+| "以前都没事" | 幸存者偏差 |
+| "没时间考虑了" | 时间压力本身就是风险 |
+| "就这一次" | 一次性例外 = 无保障 |
 
-| Factor | Question |
-|--------|----------|
-| Vulnerability | How fragile is the user or any dependent? |
-| Exposure | What harmful source could reach them? |
-| Friction | What increases difficulty of escaping? |
-| Support & recovery | What controls and fallbacks exist? |
-| Transport detail | Who is driving, what's the route and weather? |
-| Reversibility | How bad is the outcome if it happens? |
-| Uncertainty | How much critical information is missing? |
+## 不做什么
 
-### Step 6: Run Risk Engine (optional)
+- ❌ 不写长报告
+- ❌ 不跑 6 阶段分析
+- ❌ 不问 10 个问题
+- ❌ 不替代专业医疗/法律建议
+- ❌ 不把低风险场景说成高风险
 
-For complex cases with 6+ factors or multiple scenario groups:
+## 升级规则
 
-```bash
-python scripts/risk_engine.py --input case.json
-```
+**遇到以下情况，明确警告（不只是提醒）：**
+- 可能导致不可逆的身体伤害
+- 涉及孕妇/儿童/老人/病人的风险暴露
+- 用户无法独立离开的场景
+- 大额不可逆支付 + 时间压力 + 未验证对方
 
-Schema: `./references/risk-engine-schema.md`
+**遇到以下情况，建议但不过度：**
+- 中等概率的风险
+- 计划在多数场景可行但个别场景脆弱
+- 有改进空间但不是硬伤
 
-### Step 7: Output
+## 风险等级
 
-Follow the Quick Review output format in `./references/output-examples.md`.
+| 等级 | 标准 | 响应 |
+|------|------|------|
+| 🟢 低 | 日常活动，已知保障，后果可逆 | 可不提醒 |
+| 🟡 中 | 可能不便或轻微伤害，有退出方案 | 简要提醒 |
+| 🟠 高 | 可能严重伤害或重大损失，关键保障缺失 | 明确警告 + 具体建议 |
+| 🔴 严重 | 不可逆伤害可信，弱势人群暴露，无退出方案 | 强烈警告，建议暂缓 |
 
-## Full Review — 6 Phases
+## 渐进披露
 
-**Announce at start:** "I'll run a full 6-phase review."
+信息分层使用，不一次全倒出来：
 
-Run all phases in order. Each builds on the previous. Skip phases only when trivially inapplicable (state which and why). **Any Phase 1 🔴 must be resolved before proceeding.**
+| 层级 | 何时用 | 内容 |
+|------|--------|------|
+| L0 快速提醒 | 默认 | 本文件：场景识别 + 复合风险 + 简洁输出 |
+| L1 场景清单 | 用户追问或风险较高 | `checklists.md`：对应场景的逐项检查 |
+| L2 深度分析 | 用户明确要求全面分析 | 其他 references：反转思维、预验尸、压力测试、情景规划、韧性设计 |
 
-| Phase | Goal | Reference |
-|:-----:|------|-----------|
-| 1 | Catch every known risk | `./references/checklists.md` |
-| 2 | What guarantees failure? What's irreversible? | `./references/inversion-and-precaution.md` |
-| 3 | Pre-mortem, red team, fear setting | `./references/premortem-redteam-fearsetting.md` |
-| 4 | Complexity/coupling, edge cases, debiasing | `./references/stress-test.md` |
-| 5 | Test against 4 different futures | `./references/scenario-planning.md` |
-| 6 | Antifragile design, graceful degradation | `./references/resilience-building.md` |
+## 参考文件
 
-**After Phase 3, identify the kill assumption:** What single assumption, if wrong, would reverse this entire assessment?
-
-Output format → `./references/output-examples.md`
-
-## Core Operating Rules
-
-- Distinguish clearly between facts, inferences, and unknowns
-- Prefer false positives over false negatives when downside is irreversible or severe
-- Raise the level when several moderate factors combine
-- High-sensitivity modifiers: pregnancy, infancy, advanced age, disability, surgery recovery, chronic illness, severe fatigue, isolation, unfamiliar locations, hazardous workplaces, coercion, urgent money movement
-- Never say an outcome is certain unless confirmed
-- Never hide uncertainty — if key info is missing, say so explicitly
-- Do not overwhelm with every danger. Prioritize the 3-5 most material risks
-- Do not present risk reasoning as formal medical, legal, or engineering advice
-
-## Escalation Heuristics
-
-**STOP and inform the user when:**
-- Phase 1 finds 🔴 blockers
-- Phase 2 identifies ≥2 one-way doors with no checkpoints
-- Phase 3 pre-mortem finds irreversible failure with no detection signal
-- Quick Review compound risk reaches red level
-- Irreversible or severe health harm is possible
-- Pregnancy + chemical/infectious/thermal/physical exposure
-- Minors/elders/dependents with unreliable care or transport
-- Late night isolation + unfamiliar area + poor exit options
-- Urgent money/identity transfer to weakly verified parties
-- User language minimizes risk: "probably fine", "just once", "should be okay"
-
-**Recommend but don't block when:**
-- Medium-likelihood failure modes found
-- Plan fragile in 2+ scenarios but not all
-- Resilience improvements suggested
-
-## Red Flags
-
-| Thought | Reality |
-|---------|---------|
-| "Probably fine" | Unguarded risk. If you can't articulate why it's fine, it isn't. |
-| "Just this once" | One-time exceptions create precedent and miss compound risk. |
-| "Should be okay" | "Should" means you don't know. Find out. |
-| "I'll be careful" | Care is not a safeguard. Safeguards are structural. |
-| "They seem trustworthy" | Feeling is not verification. Verify independently. |
-| "Nothing happened before" | Survivorship bias. Absence of failure ≠ presence of safety. |
-| "We don't have time to review" | Time pressure itself is a risk factor (urgency tag). |
-
-## Final Check Before Responding
-
-Before sending the answer, verify:
-1. [ ] Facts separated from unknowns? If not, mark each claim as [FACT], [INFERENCE], or [UNKNOWN]
-2. [ ] Compound risk considered? If only isolated risks listed, combine them
-3. [ ] Hardest-to-reverse outcomes identified? If none, you missed something
-4. [ ] Practical next step given? If only "be careful", specify an action
-5. [ ] Kill assumption identified? Name the single assumption whose failure reverses the conclusion
-6. [ ] Answer concise? Quick Review ≤ 500 words; Full Review as long as needed but no padding
-
-## Domain References
-
-### Quick Review
-- `./references/scenario-map.md` — scenario identification and typical factor patterns
-- `./references/question-bank.md` — high-yield follow-up questions by scenario
-- `./references/risk-taxonomy.md` — cross-domain risk categories, red flags, compounding logic
-- `./references/output-examples.md` — style and structure examples
-- `./references/risk-engine-schema.md` — structured input for the risk engine
-
-### Full Review
-- `./references/checklists.md` — Phase 1: universal + scenario-specific checklists
-- `./references/inversion-and-precaution.md` — Phase 2: inversion, one-way doors, precautionary principle
-- `./references/premortem-redteam-fearsetting.md` — Phase 3: pre-mortem, red team, fear setting
-- `./references/stress-test.md` — Phase 4: complexity/coupling, edge cases, cognitive debiasing
-- `./references/scenario-planning.md` — Phase 5: 4-scenario matrix, robust & hedging actions
-- `./references/resilience-building.md` — Phase 6: antifragility, graceful degradation, belief-update signals
+- `./references/checklists.md` — L1：各场景详细检查清单
+- `./references/risk-taxonomy.md` — 风险分类、复合逻辑、等级定义
+- `./references/scenario-map.md` — 场景识别和高信号因子
+- `./references/question-bank.md` — 高价值追问
+- `./references/output-examples.md` — 输出格式示例
+- `./references/inversion-and-precaution.md` — L2：反转思维、单向门、预防原则
+- `./references/premortem-redteam-fearsetting.md` — L2：预验尸、红队、恐惧设定
+- `./references/stress-test.md` — L2：复杂度/耦合、边缘情况、认知去偏
+- `./references/scenario-planning.md` — L2：4情景矩阵、对冲行动
+- `./references/resilience-building.md` — L2：反脆弱、优雅降级、信念更新信号
+- `./references/risk-engine-schema.md` — 结构化输入 schema

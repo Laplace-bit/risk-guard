@@ -1,5 +1,24 @@
 # Release Notes
 
+## v3.0.0 (2026-04-26)
+
+### What Changed
+
+**Complete redesign: from analysis framework to risk sentinel.**
+
+The old 6-phase analysis workflow assumed users would ask for risk assessment. Reality: people don't ask — they need to be reminded at the right moment. Risk Guard v3 is now a **proactive sentinel**, not a reactive analysis tool.
+
+**Key changes:**
+
+- **L0 Quick Reminder** (default): 5 sentences max, 1-3 key risks + 1 actionable suggestion. No 6-phase analysis unless explicitly requested.
+- **19 scenario categories** with clear trigger conditions and compound-risk patterns
+- **Progressive disclosure**: L0 (quick reminder) → L1 (scenario checklists) → L2 (6-phase deep analysis)
+- **Proactive triggering**: flag risks when users mention travel, meetings, transactions, health decisions — don't wait for them to ask
+- **Red Flags table**: must-respond phrases like "应该没事", "就去一趟", "以前都没事"
+- **Compound risk emphasis**: single factors are manageable; combinations are where real danger lives
+- **All reference files preserved** for deep analysis, but not loaded by default
+- **Version bump**: 2.1.0 → 3.0.0 (breaking change in core behavior)
+
 ## v2.1.0 (2026-04-25)
 
 ### What's New

@@ -1,17 +1,19 @@
 ---
-description: "Run a full 6-phase anticipatory thinking review on a plan or decision"
+description: "深度风险分析：6阶段全面评估（检查清单→逆向思维→预验尸→压力测试→情景规划→韧性设计）"
 ---
 
-Run a full 6-phase anticipatory thinking review using the risk-guard skill.
+深度风险分析。运行全部6个阶段，适用于复杂决策和重大计划。
 
-This runs all 6 phases:
-1. **Checklist** — Catch every known risk
-2. **Inversion & Precaution** — What would guarantee failure? What's irreversible?
-3. **Imagine Failure** — Pre-mortem, red team, fear setting
-4. **Stress Test** — Complexity/coupling, edge cases, cognitive debiasing
-5. **Scenario Planning** — Test plan against 4 qualitatively different futures
-6. **Build Resilience** — Antifragile design, graceful degradation, belief-update signals
+适用：部署、迁移、重大手术决定、复杂出差、重大交易等。
 
-Best for: deployments, migrations, launches, project plans, complex decisions with real stakes.
+示例：`/risk-guard analyze "我们要在本周末迁移生产数据库"`
 
-Example: `/risk-guard analyze "We're migrating the production database from PostgreSQL to MySQL this weekend"`
+6个阶段：
+1. **检查清单** — 逐项排查已知风险
+2. **逆向与预防** — 什么保证失败？什么是不可逆的？
+3. **想象失败** — 预验尸、红队、恐惧设定
+4. **压力测试** — 复杂度/耦合、边缘情况、认知去偏
+5. **情景规划** — 4种不同未来场景
+6. **构建韧性** — 反脆弱、优雅降级、信念更新信号
+
+仅在用户明确要求深度分析时使用。日常安全提醒使用 `check`。

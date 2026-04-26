@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "updatedAtMs": 1777175169335,
+  "windows": [
+    {
+      "activeNavId": "files",
+      "pinnedWorkbenchContainerId": null
+    }
+  ],
+  "tabs": [
+    {
+      "path": "CLAUDE.md",
+      "active": false
+    },
+    {
+      "path": "GEMINI.md",
+      "active": true
+    }
+  ],
+  "terminals": [],
+  "workbenchContainers": [
+    {
+      "id": "canvas-main",
+      "stationIds": [],
+      "activeStationId": null,
+      "layoutMode": "focus",
+      "customLayout": {
+        "columns": 2,
+        "rows": 2
+      },
+      "mode": "docked",
+      "resumeMode": "docked",
+      "topmost": false,
+      "frame": null
+    }
+  ]
+}
