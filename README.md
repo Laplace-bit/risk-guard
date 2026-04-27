@@ -15,7 +15,7 @@
 claude plugin marketplace add Laplace-bit/risk-guard
 
 # 安装
-claude plugin install risk-guard@risk-guard-dev
+claude plugin install risk-guard@risk-guard
 ```
 
 或本地开发（仅当前会话生效）：
