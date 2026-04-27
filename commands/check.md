@@ -1,13 +1,13 @@
 ---
-description: "快速安全提醒：对描述的计划进行风险评估，给出简洁可操作的建议"
+description: "Quick safety review: assess risks in your plan and give concise, actionable advice"
 ---
 
-快速安全审查。识别场景，标记关键风险，给出具体建议。
+Quick safety review. Identify the scenario, flag key risks, and give specific advice.
 
-适用：出行安全、见陌生人、交易、户外活动、就医决定等。
+Use for: travel safety, meeting strangers, transactions, outdoor activities, medical decisions, etc.
 
-示例：`/risk-guard check "我下周要去呼和浩特出差三天"`
+Example: `/risk-guard check "I'm traveling to Hohhot for 3 days next week"`
 
-输出格式：1-3个关键风险 + 1条具体建议 + 1个关键问题（如果信息不足）。不超过5句话。
+Output format: 1-3 key risks + 1 specific recommendation + 1 critical question (if info is insufficient). No more than 5 sentences.
 
-如果风险较高或用户追问，引导使用 `analyze` 进行深度分析。
+If risk is high or the user asks for more, suggest using `analyze` for deep review.

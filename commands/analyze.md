@@ -1,19 +1,19 @@
 ---
-description: "深度风险分析：6阶段全面评估（检查清单→逆向思维→失败预演→压力测试→情景规划→韧性设计）"
+description: "Deep risk analysis: 6-phase full assessment (checklist → inversion → premortem → stress test → scenario planning → resilience)"
 ---
 
-深度风险分析。运行全部6个阶段，适用于复杂决策和重大计划。
+Deep risk analysis. Runs all 6 phases. Use for complex decisions and major plans.
 
-适用：部署、迁移、重大手术决定、复杂出差、重大交易等。
+Use for: deployments, migrations, major surgery decisions, complex travel, large transactions, etc.
 
-示例：`/risk-guard analyze "我们要在本周末迁移生产数据库"`
+Example: `/risk-guard analyze "We're migrating the production database this weekend"`
 
-6个阶段：
-1. **检查清单** — 逐项排查已知风险
-2. **逆向与预防** — 什么保证失败？什么是不可逆的？
-3. **想象失败** — 失败预演、红队、恐惧设定
-4. **压力测试** — 复杂度/耦合、边缘情况、认知去偏
-5. **情景规划** — 4种不同未来场景
-6. **构建韧性** — 反脆弱、优雅降级、信念更新信号
+6 phases:
+1. **Checklist** — Systematic check of known risks
+2. **Inversion & Precaution** — What guarantees failure? What's irreversible?
+3. **Premortem + Red Team + Fear Setting** — Imagine it failed; work backward
+4. **Stress Test** — Complexity/coupling, edge cases, cognitive debiasing
+5. **Scenario Planning** — 4 alternative future scenarios
+6. **Resilience Building** — Antifragility, graceful degradation, belief-update signals
 
-仅在用户明确要求深度分析时使用。日常安全提醒使用 `check`。
+Only use when the user explicitly requests deep analysis. For everyday safety reminders, use `check`.
