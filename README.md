@@ -12,13 +12,13 @@
 
 ```bash
 # 添加 marketplace
-/plugin marketplace add Laplace-bit/risk-guard
+claude plugin marketplace add Laplace-bit/risk-guard
 
 # 安装
-/plugin install risk-guard@risk-guard
+claude plugin install risk-guard@risk-guard-dev
 ```
 
-或本地开发：
+或本地开发（仅当前会话生效）：
 ```bash
 claude --plugin-dir /path/to/risk-guard
 ```
