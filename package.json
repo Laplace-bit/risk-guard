@@ -1,7 +1,7 @@
 {
   "name": "risk-guard",
   "description": "Risk awareness skill for AI assistants. Proactively flags safety, health, financial, and personal risks when users describe real-world plans — travel, meetings, transactions, medical decisions, outdoor activities, and more. Three-layer progressive disclosure: quick reminder → scenario checklists → deep analysis.",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "type": "module",
   "author": {
     "name": "dzlin"
