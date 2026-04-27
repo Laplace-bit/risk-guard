@@ -5,10 +5,10 @@ Use this schema when calling `python scripts/risk_engine.py --input case.json`.
 ```json
 {
   "scenario_tags": ["workplace_or_site_visit", "health_sensitive_activity"],
-  "vulnerability_tags": ["possible_pregnancy", "fatigue"],
+  "vulnerability_tags": ["possible_pregnancy", "fatigue", "g6pd_deficiency", "asthma_or_copd"],
   "exposure_tags": ["chemical", "long_walking", "heat"],
   "counterparty_tags": [],
-  "safeguard_tags": ["can_exit_independently"],
+  "safeguard_tags": ["can_exit_independently", "confirmed_ppe"],
   "constraint_tags": ["poor_medical_access"],
   "transport_tags": [],
   "anticipatory_tags": [],
@@ -17,6 +17,36 @@ Use this schema when calling `python scripts/risk_engine.py --input case.json`.
   "free_text": "optional case note"
 }
 ```
+
+## Vulnerability Tag Reference
+
+### General
+`possible_pregnancy` `pregnancy` `post_op` `chronic_illness` `elder` `child` `fatigue` `mobility_limit`
+
+### Special Constitution
+| Tag | Description |
+|-----|-------------|
+| `g6pd_deficiency` | G6PD deficiency (蚕豆病) — hemolytic crisis from camphor, sulfonamides, fava beans |
+| `thyroid_disease` | Hyper/hypothyroid — radiation and iodine sensitivity |
+| `asthma_or_copd` | Respiratory condition — dust, VOC, cold air triggers |
+| `immunosuppressed` | Immune suppression — infection risk far above normal |
+| `metal_allergy` | Nickel/chrome/cobalt allergy — industrial chemical contact |
+| `severe_allergy` | Anaphylaxis history — food, insect, latex, chemical |
+| `photosensitivity` | SLE etc. — UV and photosensitizing drug triggers |
+| `coagulopathy` | Bleeding/clotting disorder — trauma, surgery risk |
+| `epilepsy` | Seizure disorder — open water, heights, flashing lights |
+| `emf_sensitive_or_implant` | Pacemaker/implant or EMF sensitivity — MRI, industrial RF |
+
+### Reproductive Stage
+| Tag | Description |
+|-----|-------------|
+| `trying_to_conceive` | Conception planning (male or female) — reproductive toxicity matters |
+| `early_pregnancy` | 0-12 weeks (organogenesis) — highest teratogenic risk |
+| `late_pregnancy` | 13-40 weeks — preterm labor risk, exertion limits |
+| `breastfeeding` | Lactation — solvent/heavy metal/drug transfer via milk |
+| `menstruation` | Menstrual period — clotting changes, immune dip, iron loss |
+
+---
 
 ## Notes
 - Use short machine-friendly tags.

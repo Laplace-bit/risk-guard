@@ -4,6 +4,7 @@
 - Personal safety
 - Physical health
 - Reproductive and pregnancy-sensitive health
+- Special constitution and exposure interaction (G6PD, thyroid, immunosuppression, metal allergy, photosensitivity, coagulopathy, epilepsy, EMF sensitivity, severe allergy)
 - Financial and property loss
 - Coercion, control, and inability to exit
 - Identity or document compromise
@@ -18,6 +19,8 @@
 Moderate factors become high concern when combined.
 
 Examples:
+- **Special constitution + environmental exposure:** G6PD deficiency + camphor/naphthalene → acute hemolytic crisis; Hyperthyroid + ionizing radiation → thyroid storm; Asthma + dust/VOC → acute bronchospasm; Immunosuppressed + biohazard → severe opportunistic infection; Metal allergy + industrial chemicals → systemic allergic reaction; Pregnancy + organic solvents/radiation → fetal harm; Photosensitivity (SLE) + UV → disease flare
+- **Pregnancy/lactation/conception + exposure:** Early pregnancy (0-12wk, organogenesis) + radiation/solvents/heavy metals → highest teratogenic risk; Lactation + solvents/heavy metals → infant exposure via breast milk; Conception planning (male or female) + lead/mercury/radiation → reproductive toxicity; Menstruation + extreme exertion + iron depletion → anemia exacerbation; "Could be pregnant but doesn't know" + any teratogen → silent exposure during critical window
 - Pregnancy + chemical exposure + prolonged walking
 - Solo travel + night hours + dead phone + unfamiliar location
 - Private meeting + weak identity verification + alcohol + transport dependency
@@ -59,6 +62,7 @@ Examples:
 
 ## Red Flags That Should Heavily Escalate
 - Irreversible health harm is credible
+- **Special constitution + hazardous exposure is possible (G6PD + camphor, thyroid + radiation, asthma + chemical fumes, immunosuppressed + biohazard, pregnancy + solvents/radiation, metal allergy + industrial chemicals, etc.)**
 - Child, elder, dependent, pregnant person, or medically fragile person is exposed
 - User cannot leave independently
 - User is being rushed or pressured

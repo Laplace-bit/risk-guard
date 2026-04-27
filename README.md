@@ -6,7 +6,43 @@
 
 核心理念：**不是等用户问"安不安全"，而是在对的时刻主动说出关键提醒。**
 
-## 三层渐进披露
+## 快速开始
+
+### Claude Code
+
+```bash
+# 添加 marketplace
+/plugin marketplace add Laplace-bit/risk-guard
+
+# 安装
+/plugin install risk-guard@risk-guard
+```
+
+或本地开发：
+```bash
+claude --plugin-dir /path/to/risk-guard
+```
+
+安装后新会话自动生效，无需额外配置。
+
+## 它怎么工作
+
+### 自动触发（不需要命令）
+
+大多数情况下你不需要做任何事。Risk Guard 会在识别到风险场景时主动提醒：
+
+- 你说"我下周出差" → 它提醒天气、身体、交通风险
+- 你说"我要去见个人" → 它提醒身份验证、公共场合、位置共享
+- 你说"我要转一笔钱" → 它提醒验证身份、不可逆支付
+
+### 命令（按需使用）
+
+| 命令 | 用途 |
+|------|------|
+| `/risk-guard check "计划描述"` | 快速安全提醒（默认模式，≤5句话） |
+| `/risk-guard analyze "计划描述"` | 深度6阶段分析（仅在明确要求时） |
+
+### 三层渐进披露
 
 信息分层使用，不一次全倒出来：
 
@@ -14,34 +50,17 @@
 |------|----------|------|
 | **L0 快速提醒** | 默认 | 场景识别 + 复合风险 + 简洁输出（≤5句话） |
 | **L1 场景清单** | 用户追问或风险较高 | 对应场景的逐项检查清单 |
-| **L2 深度分析** | 用户明确要求全面分析 | 6阶段框架：检查清单→逆向→预验尸→压力测试→情景规划→韧性设计 |
+| **L2 深度分析** | 用户明确要求全面分析 | 6阶段框架 |
 
-## 它怎么工作
+### 示例
 
-### 快速提醒（默认模式）
-
-当你提到出差、见陌生人、大额交易、就医等计划时，Risk Guard 会：
-
-1. **识别场景** — 匹配到 19 个风险场景之一（出行、诈骗、户外、面试……）
-2. **评估复合风险** — 单一风险可控，组合才致命（如：术后+高海拔+无医疗支持）
-3. **简洁提醒** — 1-3个关键风险 + 1条具体建议，不超过5句话
-
-示例：
+**L0 快速提醒：**
 
 > 下周呼和浩特出差？最近那边降温到 -15°C，你膝盖恢复好了吗？出发前确认下酒店附近有没有医院。
 
-### 深度分析（按需）
+**L0 + 体质交互：**
 
-用户主动要求时，运行完整的 6 阶段分析：
-
-| 阶段 | 方法 | 来源 |
-|------|------|------|
-| Phase 1 | 检查清单 | Atul Gawande, *The Checklist Manifesto* |
-| Phase 2 | 逆向思维 + 预防原则 | Charlie Munger / Descartes / Wingspread Declaration |
-| Phase 3 | 预验尸 + 红队 + 恐惧设定 | Gary Klein / 军事红队 / Tim Ferriss / 斯多葛学派 |
-| Phase 4 | 复杂度/耦合 + 认知去偏 | Charles Perrow / Daniel Kahneman |
-| Phase 5 | 情景规划 | Peter Schwartz / Shell |
-| Phase 6 | 反脆弱 + 优雅降级 | Nassim Taleb / Erik Hollnagel |
+> 你有G6PD缺乏，要去化工厂参观？那边可能有樟脑/萘类制品。确认一下现场有没有这些物质，有的话避开。
 
 ## 19 个风险场景
 
@@ -58,6 +77,33 @@
 | 9 | 🌙 夜间与独处 | 19 | 🔧 家政与装修 |
 | 10 | 🌐 线上转线下 | | |
 
+## 特殊体质与环境暴露
+
+Risk Guard 不假设用户是"标准健康成人"。当计划涉及辐射、化学、生物暴露时，会主动检查特殊体质：
+
+| 体质/状况 | 高危暴露 | 后果 |
+|-----------|----------|------|
+| G6PD缺乏（蚕豆病） | 樟脑/萘、磺胺类、蚕豆 | 急性溶血性贫血 |
+| 甲亢/甲状腺疾病 | 电离辐射、含碘造影剂 | 甲状腺危象 |
+| 哮喘/COPD | 粉尘、VOC、化学烟气 | 急性发作 |
+| 免疫抑制 | 生物暴露、活疫苗 | 严重感染 |
+| 孕早期（0-12周） | 辐射、有机溶剂、重金属 | 胎儿致畸 |
+| 备孕期（男女） | 铅/汞/镉、辐射 | 生殖毒性 |
+| 哺乳期 | 有机溶剂、重金属 | 婴儿通过母乳摄入 |
+
+[完整对照表见 SKILL.md](./SKILL.md)
+
+## 复合风险
+
+单一风险通常可控，组合才致命：
+
+| 组合模式 | 示例 |
+|----------|------|
+| 特殊体质 + 环境暴露 | 甲亢 + 辐射 / G6PD缺乏 + 樟脑 / 孕早期 + 有机溶剂 |
+| 健康 + 环境 | 术后 + 高海拔 / 慢性病 + 极端温度 |
+| 孤立 + 无退路 | 独自 + 夜间 + 无信号 |
+| 压力 + 不可逆 | 时间压力 + 不可逆支付 |
+
 ## Red Flags
 
 用户说这些话时，Risk Guard 必须提醒：
@@ -71,51 +117,18 @@
 | "以前都没事" | 幸存者偏差 |
 | "没时间考虑了" | 时间压力本身就是风险 |
 
-## 安装
+## 深度分析（L2）
 
-### Claude Code
+用户明确要求时，运行 6 阶段分析：
 
-```bash
-claude plugin marketplace add Laplace-bit/risk-guard
-claude plugin install risk-guard@risk-guard-dev
-```
-
-或本地开发：
-```bash
-claude --plugin-dir /path/to/risk-guard
-```
-
-### Gemini CLI
-
-```bash
-gemini extensions install https://github.com/Laplace-bit/risk-guard
-```
-
-### OpenAI Codex CLI
-
-```bash
-git clone https://github.com/Laplace-bit/risk-guard.git ~/.codex/risk-guard
-mkdir -p ~/.agents/skills
-ln -s ~/.codex/risk-guard ~/.agents/skills/risk-guard
-```
-
-### OpenCode
-
-在 `opencode.json` 中添加：
-```json
-{
-  "plugin": ["risk-guard@git+https://github.com/Laplace-bit/risk-guard.git"]
-}
-```
-
-## 命令
-
-| 命令 | 用途 |
-|------|------|
-| `/risk-guard check "计划描述"` | 快速安全提醒（默认模式） |
-| `/risk-guard analyze "计划描述"` | 深度6阶段分析 |
-
-大多数情况下不需要命令——Risk Guard 会在识别到风险场景时主动提醒。
+| 阶段 | 方法 | 来源 |
+|------|------|------|
+| Phase 1 | 检查清单 | Atul Gawande, *The Checklist Manifesto* |
+| Phase 2 | 逆向思维 + 预防原则 | Charlie Munger / Descartes / Wingspread Declaration |
+| Phase 3 | 预验尸 + 红队 + 恐惧设定 | Gary Klein / 军事红队 / Tim Ferriss / 斯多葛学派 |
+| Phase 4 | 复杂度/耦合 + 认知去偏 | Charles Perrow / Daniel Kahneman |
+| Phase 5 | 情景规划 | Peter Schwartz / Shell |
+| Phase 6 | 反脆弱 + 优雅降级 | Nassim Taleb / Erik Hollnagel |
 
 ## 项目结构
 
@@ -159,7 +172,8 @@ risk-guard/
 4. **宁虚警勿漏报** — 当后果不可逆时，保守比乐观好
 5. **具体可操作** — 不是"注意安全"，而是"确认最近医院在xx路上"
 6. **主动触发** — 不等用户问"安不安全"，识别到风险场景就提醒
-7. **科学依据** — 每个阶段都有同行评审的认知科学研究支撑
+7. **不假设标准健康成人** — 特殊体质、孕产阶段、年龄、药物都会改变风险容忍度
+8. **科学依据** — 每个阶段都有同行评审的认知科学研究支撑
 
 ## License
 

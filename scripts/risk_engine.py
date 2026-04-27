@@ -33,6 +33,23 @@ WEIGHTS: Dict[str, int] = {
     "child": 4,
     "fatigue": 2,
     "mobility_limit": 3,
+    # special constitution vulnerabilities
+    "g6pd_deficiency": 5,           # G6PD deficiency — hemolytic crisis risk
+    "thyroid_disease": 4,           # Hyperthyroid/hypothyroid — radiation, iodine sensitivity
+    "asthma_or_copd": 4,           # Respiratory — dust, VOC, cold air triggers
+    "immunosuppressed": 5,         # Immune suppression — infection risk far above normal
+    "metal_allergy": 3,            # Nickel/chrome/cobalt allergy — industrial chemical contact
+    "severe_allergy": 5,           # Anaphylaxis risk — food, insect, latex, chemical
+    "photosensitivity": 3,         # SLE etc. — UV and photosensitizing drug triggers
+    "coagulopathy": 4,             # Bleeding/clotting disorder — trauma, surgery, anticoagulants
+    "epilepsy": 4,                 # Seizure disorder — open water, heights, flashing lights
+    "emf_sensitive_or_implant": 3,  # Pacemaker/implant or EMF sensitivity — MRI, industrial RF
+    # reproductive stage vulnerabilities
+    "trying_to_conceive": 3,       # Conception planning (male or female) — reproductive toxicity
+    "early_pregnancy": 7,          # 0-12 weeks, organogenesis — highest teratogenic risk
+    "late_pregnancy": 4,           # 13-40 weeks — preterm labor risk, exertion limits
+    "breastfeeding": 4,            # Lactation — solvent/heavy metal/drug transfer via milk
+    "menstruation": 2,            # Menstrual period — clotting changes, immune dip, iron loss
     # exposures
     "chemical": 6,
     "infectious": 4,
@@ -203,6 +220,40 @@ COMPOUND_RULES: List[Tuple[Set[str], Set[str], int, str]] = [
      "construction or renovation hazard with unconfirmed PPE"),
     ({"formaldehyde_fumes"}, {"pregnancy", "possible_pregnancy", "child"}, 6,
      "renovation off-gassing exposure with vulnerable person present"),
+    # Special constitution + exposure compound rules
+    ({"g6pd_deficiency"}, {"chemical", "dust"}, 7,
+     "G6PD deficiency combined with chemical exposure — hemolytic crisis risk"),
+    ({"g6pd_deficiency"}, {"formaldehyde_fumes"}, 6,
+     "G6PD deficiency with renovation/home chemical exposure — camphor/naphthalene/sulfonamide risk"),
+    ({"thyroid_disease"}, {"radiation"}, 7,
+     "Thyroid disease combined with radiation exposure — thyroid storm risk"),
+    ({"thyroid_disease"}, {"chemical"}, 5,
+     "Thyroid disease combined with chemical exposure — iodine contrast/solvent risk"),
+    ({"asthma_or_copd"}, {"dust", "chemical", "formaldehyde_fumes", "cold"}, 7,
+     "Asthma/COPD combined with respiratory irritant — acute bronchospasm risk"),
+    ({"immunosuppressed"}, {"infectious", "chemical"}, 7,
+     "Immunosuppressed person in infectious or chemically contaminated environment — severe infection risk"),
+    ({"severe_allergy"}, {"chemical", "extreme_exertion"}, 6,
+     "Severe allergy in exposed environment — anaphylaxis with delayed treatment access"),
+    ({"photosensitivity"}, {"heat", "altitude"}, 5,
+     "Photosensitive condition at high altitude or in heat — UV-induced disease flare"),
+    ({"coagulopathy"}, {"extreme_exertion", "deep_water", "construction_hazard"}, 6,
+     "Bleeding/clotting disorder in trauma-risk environment — uncontrolled hemorrhage risk"),
+    ({"epilepsy"}, {"deep_water", "altitude", "extreme_exertion"}, 7,
+     "Epilepsy in open water/high altitude/extreme exertion — seizure in fatal environment"),
+    ({"emf_sensitive_or_implant"}, {"radiation"}, 5,
+     "Implanted device or EMF sensitivity in radiation/EMF environment — device malfunction"),
+    # Reproductive stage + exposure compound rules
+    ({"early_pregnancy"}, {"radiation", "chemical"}, 9,
+     "Early pregnancy (organogenesis) with radiation/chemical exposure — highest teratogenic risk"),
+    ({"trying_to_conceive"}, {"radiation", "chemical"}, 6,
+     "Conception planning with reproductive toxicant exposure — male or female fertility risk"),
+    ({"breastfeeding"}, {"chemical", "formaldehyde_fumes"}, 6,
+     "Breastfeeding with chemical/solvent exposure — infant exposure via breast milk"),
+    ({"menstruation"}, {"extreme_exertion", "heat"}, 4,
+     "Menstrual period with extreme exertion or heat — anemia exacerbation, clotting risk"),
+    ({"early_pregnancy", "possible_pregnancy"}, {"formaldehyde_fumes", "chemical", "radiation"}, 8,
+     "Known or possible early pregnancy in renovation/chemical/radiation environment — critical teratogenic window"),
 ]
 
 # ──────────────────────────────────────────────────────────────

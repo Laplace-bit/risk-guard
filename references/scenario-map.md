@@ -21,13 +21,35 @@ Match by trigger keywords first, then check high-signal factors for severity.
 
 **High-signal factors:** 化学品、粉尘、噪音、高温、辐射、生物危害、高空作业、长时间行走、PPE 不确定、紧急出口受限、无安全培训、无陪同
 
+**Special constitution interaction (MUST CHECK):**
+- 哮喘/COPD → 粉尘、化学烟气、VOC 可致急性发作
+- 甲状腺疾病 → 辐射暴露（核设施、工业放射源、含碘消毒）可加重
+- 免疫抑制 → 生物危害暴露风险远高于常人
+- 金属过敏 → 工业化学品、金属粉尘可致严重过敏
+- 孕期/可能怀孕 → 有机溶剂、重金属、辐射对胎儿影响严重
+- 肾功能不全 → 重金属暴露增加急性肾损伤风险
+
 ---
 
 ## 3. 🏥 健康敏感活动 (Health-Sensitive Activity)
 
-**Triggers:** 怀孕、可能怀孕、术后恢复、慢性病、急性症状、用药副作用
+**Triggers:** 怀孕、可能怀孕、术后恢复、慢性病、急性症状、用药副作用、特殊体质、已知过敏
 
-**High-signal factors:** 体力消耗、脱水、高温、感染暴露、化学品、高海拔、睡眠不足、卫生间不便、无医疗支持
+**High-signal factors:** 体力消耗、脱水、高温、感染暴露、化学品、辐射、生物暴露、高海拔、睡眠不足、卫生间不便、无医疗支持
+
+**Special constitution interaction (MUST CHECK):**
+- 此场景本身就是体质敏感的"主场景"——任何涉及身体的活动都应先确认体质
+- 甲亢/甲状腺 → 辐射、含碘造影剂、极端温度
+- G6PD缺乏 → 樟脑、磺胺、蚕豆、伯氨喹、亚甲蓝（家政、药品、食品都可能接触）
+- 免疫抑制 → 任何感染暴露环境、活疫苗
+- 严重过敏 → 新环境食物、昆虫、乳胶、特定化学
+- 光敏感（SLE等） → 紫外线暴露、光敏药物
+- 凝血障碍 → 创伤风险环境、抗凝药物
+- 备孕期（男女） → 铅/汞/镉、有机溶剂、辐射（生殖毒性，不只影响女性）
+- 孕早期（0-12周） → 辐射、有机溶剂、重金属、活疫苗（器官发生期，致畸风险最高）
+- 孕中晚期（13-40周） → 长时间站立/行走、高温（早产风险为主）
+- 哺乳期 → 有机溶剂、重金属、某些药物（通过乳汁传递，容易被忽视）
+- 生理期 → 凝血变化、免疫波动、贫血+极端环境
 
 ---
 
@@ -68,6 +90,13 @@ Match by trigger keywords first, then check high-signal factors for severity.
 **Triggers:** 徒步、露营、划船、海滩、高温预警、暴风雨、洪水区
 
 **High-signal factors:** 无信号、无遮阳、无水源、独自、天气不稳定、野生动物、地形困难、返回时间窗口窄
+
+**Special constitution interaction (MUST CHECK):**
+- 光敏感疾病 → 高海拔紫外线、海滩暴晒可诱发发作
+- 哮喘 → 冷空气、花粉、山火烟尘
+- 严重过敏 → 昆虫叮咬、未知食物（野外求生场景无急诊）
+- 心脏病 → 高海拔缺氧
+- G6PD缺乏 → 疟区预防药（伯氨喹等）禁用
 
 ---
 
@@ -117,6 +146,15 @@ Match by trigger keywords first, then check high-signal factors for severity.
 
 **High-signal factors:** 无第二诊疗意见、风险解释不清、催促决定、未验证的机构、隐藏费用、无术后照护方案、无法转院
 
+**Special constitution interaction (MUST CHECK):**
+- 甲状腺疾病 → 含碘造影剂（CT增强扫描）可诱发甲亢危象
+- 肾功能不全 → 造影剂肾病风险、药物代谢调整
+- G6PD缺乏 → 多种药物禁忌（磺胺、伯氨喹、亚甲蓝、某些止痛药）
+- 凝血障碍 → 手术/麻醉方案需专门调整
+- 金属过敏 → 植入物（关节置换、支架、补牙材料）选择受限
+- 免疫抑制 → 活疫苗禁忌、术后感染风险极高
+- 电磁敏感/植入设备 → MRI禁忌
+
 ---
 
 ## 15. 🌊 自然灾害应对 (Natural Disaster Response)
@@ -149,6 +187,13 @@ Match by trigger keywords first, then check high-signal factors for severity.
 
 **High-signal factors:** 无热身、无教练/监督、极端环境（高温/低温/高海拔/深水）、基础疾病、无急救方案、超出当前能力
 
+**Special constitution interaction (MUST CHECK):**
+- 哮喘 → 冷空气运动、泳池氯气、干燥环境可诱发
+- 心脏病 → 高强度运动、高海拔缺氧
+- 凝血障碍 → 创伤性运动（搏击、橄榄球）出血风险
+- 癫痫 → 开放水域游泳、高空运动、潜水（发作即致命）
+- 严重过敏 → 户外昆虫叮咬、远离急诊
+
 ---
 
 ## 19. 🔧 家政与装修 (Home Service & Renovation)
@@ -156,6 +201,13 @@ Match by trigger keywords first, then check high-signal factors for severity.
 **Triggers:** 水管工、电工、保洁、搬家、装修队、任何陌生人进入家中工作
 
 **High-signal factors:** 未验证身份、独居时让陌生人进入、无书面报价、预付全款、材料甲醛/粉尘隐患、无质保、贵重物品可触及
+
+**Special constitution interaction (MUST CHECK):**
+- G6PD缺乏 → 樟脑丸（家政常用）可致急性溶血
+- 哮喘 → 装修粉尘、涂料VOC、甲醛可致急性发作
+- 孕期/儿童 → 甲醛、涂料、粉尘对胎儿/儿童发育影响严重
+- 免疫抑制 → 装修霉菌暴露风险极高
+- 化学敏感 → 清洁剂、粘合剂、涂料
 
 ---
 
@@ -165,6 +217,7 @@ Single factors are manageable. Risk emerges from combination:
 
 | Pattern | Example |
 |---------|---------|
+| Special constitution + Exposure | 甲亢 + 辐射 / 哮喘 + 粉尘 / G6PD缺乏 + 樟脑 / 免疫抑制 + 生物暴露 / 金属过敏 + 工业化学品 / 孕期 + 有机溶剂 |
 | Health + Environment | 术后 + 高海拔 / 孕期 + 化学暴露 / 慢性病 + 极端温度 |
 | Isolation + No exit | 独自 + 夜间 + 无信号 / 无备用交通 / 手机没电 |
 | Pressure + Irreversible | 时间压力 + 不可逆支付 / 催促签约 + 无冷静期 |

@@ -359,3 +359,71 @@ High — the domain mismatch and urgency pattern are unambiguous phishing signal
 3. 🟡 **Dual-write for 7 days post-migration** — keeps PostgreSQL as a true fallback, not a theoretical one
 4. 🟡 **Run automated data quality checks immediately post-migration** — row count + checksum + 5% random sample deep-compare
 5. 🟡 **Assign a named second engineer** — bus factor < 2 is unacceptable for an irreversible operation of this scale
+
+---
+
+## Example 6: G6PD Deficiency + Chemical Plant Visit
+
+### Situation summary
+A user with G6PD deficiency (蚕豆病) is planning to visit a chemical manufacturing plant for a client meeting, with a site walk planned on the production floor.
+
+### What I found automatically
+No independent search was performed for this case.
+
+### Decision
+Orange — Proceed only after confirming no camphor/naphthalene, sulfonamides, or methylene blue exposure on site; bring your own unscented hand sanitizer.
+
+### Why this is risky
+- G6PD deficiency makes you vulnerable to hemolytic crisis from common industrial chemicals (naphthalene/mothballs, certain dyes, sulfonamide residues) that would not affect most people.
+- Plant visits combine uncertain chemical exposure with limited personal control over the environment.
+- Hemolytic crisis can onset rapidly and requires immediate medical attention — distance to hospital matters more than for a standard visitor.
+
+### Missing critical facts
+- Exact chemicals used and stored on the production floor
+- Whether the facility uses camphor/naphthalene-based pest control or deodorizers
+- Distance to nearest hospital and on-site medical resources
+
+### Best next actions
+1. Ask the host for a written list of chemicals used and stored on-site before the visit.
+2. Specifically confirm: no camphor/naphthalene pest control, no sulfonamide-containing processes, no methylene blue in any on-site products or cleaning agents.
+3. Carry a G6PD deficiency medical alert card and ensure a colleague knows your condition.
+4. Confirm the nearest hospital and have your own transport — do not rely on site shuttle.
+
+### Worst credible outcomes
+Acute hemolytic anemia requiring emergency transfusion, delayed treatment due to unfamiliar hospital, triggering food or chemical contact that the host did not flag because they assumed "standard" exposure.
+
+### Confidence
+Medium — the specific chemical exposure is unknown, but the combination of G6PD deficiency and chemical plant is a known high-risk interaction that most people (and hosts) would not think to check.
+
+---
+
+## Example 7: Asthma + Home Renovation
+
+### Situation summary
+A user with moderate asthma is planning to stay in their apartment during a 2-week renovation involving wall sanding, painting, and new floor installation.
+
+### Decision
+Orange — Do not stay in the apartment during renovation without confirmed ventilation and barrier controls.
+
+### Why this is risky
+- Wall sanding produces fine dust; paint and adhesives release VOCs; new flooring may off-gas formaldehyde — all three are known asthma triggers that can cause acute bronchospasm.
+- Continuous exposure over 2 weeks is fundamentally different from a one-time visit — cumulative lung inflammation increases severity with each day.
+- Sleeping in the space means no recovery period; nighttime exposure is worse due to reduced air exchange.
+
+### Missing critical facts
+- Whether dust barriers and negative-pressure ventilation will be used
+- Specific paint and adhesive brands (low-VOC vs standard)
+- Whether the user has a rescue inhaler and knows how to use it during an acute episode
+
+### Best next actions
+1. Move out during the renovation — this is the single most effective risk reduction.
+2. If staying is unavoidable: require the contractor to use dust barriers with negative pressure, low-VOC paint, and formaldehyde-free flooring materials.
+3. Keep rescue medication (short-acting bronchodilator) accessible at all times.
+4. Get a HEPA air purifier for the bedroom and run it continuously.
+5. Establish a "stop work" signal — if you feel any symptoms, the work pauses immediately.
+
+### Worst credible outcomes
+Severe asthma attack requiring ER, chronic airway hyperresponsiveness from prolonged VOC/dust exposure, hospitalization during renovation with no one aware of the condition.
+
+### Confidence
+High — the asthma + renovation dust/VOC combination is well-documented in clinical literature and is a predictable, preventable risk.

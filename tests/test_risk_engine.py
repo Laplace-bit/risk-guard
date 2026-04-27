@@ -765,6 +765,295 @@ def test_new_scenario_tags_weight():
         f"Medical scenario tag should increase score: {score_medical} <= {score_base}"
 
 
+# ── v3.0 special constitution & reproductive stage tests ──
+
+
+def test_g6pd_chemical_compound():
+    """G6PD deficiency + chemical/dust should trigger hemolytic crisis rule."""
+    result = run_engine({
+        "scenario_tags": ["workplace_or_site_visit"],
+        "vulnerability_tags": ["g6pd_deficiency"],
+        "exposure_tags": ["chemical"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["level"] in ("orange", "red"), f"Expected orange/red, got {result['level']} (score {result['score']})"
+    assert any("g6pd" in r.lower() or "hemolytic" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected G6PD compound rule, got: {result['triggered_rules']}"
+
+
+def test_g6pd_formaldehyde_compound():
+    """G6PD deficiency + formaldehyde_fumes should trigger home/chemical exposure rule."""
+    result = run_engine({
+        "scenario_tags": ["home_service_or_renovation"],
+        "vulnerability_tags": ["g6pd_deficiency"],
+        "exposure_tags": ["formaldehyde_fumes"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["score"] > 0, "Expected non-zero score for G6PD + formaldehyde"
+    assert any("g6pd" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected G6PD compound rule, got: {result['triggered_rules']}"
+
+
+def test_thyroid_radiation_compound():
+    """Thyroid disease + radiation should trigger thyroid storm rule."""
+    result = run_engine({
+        "scenario_tags": ["workplace_or_site_visit"],
+        "vulnerability_tags": ["thyroid_disease"],
+        "exposure_tags": ["radiation"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["level"] in ("orange", "red"), f"Expected orange/red, got {result['level']} (score {result['score']})"
+    assert any("thyroid" in r.lower() or "storm" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected thyroid compound rule, got: {result['triggered_rules']}"
+
+
+def test_asthma_dust_compound():
+    """Asthma/COPD + dust should trigger bronchospasm rule."""
+    result = run_engine({
+        "scenario_tags": ["workplace_or_site_visit"],
+        "vulnerability_tags": ["asthma_or_copd"],
+        "exposure_tags": ["dust"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["level"] in ("orange", "red"), f"Expected orange/red, got {result['level']} (score {result['score']})"
+    assert any("asthma" in r.lower() or "bronchospasm" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected asthma compound rule, got: {result['triggered_rules']}"
+
+
+def test_asthma_formaldehyde_compound():
+    """Asthma/COPD + formaldehyde_fumes should trigger respiratory irritant rule."""
+    result = run_engine({
+        "scenario_tags": ["home_service_or_renovation"],
+        "vulnerability_tags": ["asthma_or_copd"],
+        "exposure_tags": ["formaldehyde_fumes"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert any("asthma" in r.lower() or "respiratory" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected asthma+formaldehyde compound rule, got: {result['triggered_rules']}"
+
+
+def test_immunosuppressed_infectious_compound():
+    """Immunosuppressed + infectious should trigger severe infection rule."""
+    result = run_engine({
+        "scenario_tags": ["health_sensitive_activity"],
+        "vulnerability_tags": ["immunosuppressed"],
+        "exposure_tags": ["infectious"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["level"] in ("orange", "red"), f"Expected orange/red, got {result['level']} (score {result['score']})"
+    assert any("immunosuppressed" in r.lower() or "infection" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected immunosuppressed compound rule, got: {result['triggered_rules']}"
+
+
+def test_severe_allergy_exertion_compound():
+    """Severe allergy + extreme exertion should trigger anaphylaxis rule."""
+    result = run_engine({
+        "scenario_tags": ["sports_and_fitness_activity"],
+        "vulnerability_tags": ["severe_allergy"],
+        "exposure_tags": ["extreme_exertion"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert any("allergy" in r.lower() or "anaphylaxis" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected severe allergy compound rule, got: {result['triggered_rules']}"
+
+
+def test_epilepsy_deep_water_compound():
+    """Epilepsy + deep water should trigger seizure-in-fatal-environment rule."""
+    result = run_engine({
+        "scenario_tags": ["sports_and_fitness_activity"],
+        "vulnerability_tags": ["epilepsy"],
+        "exposure_tags": ["deep_water"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["level"] in ("orange", "red"), f"Expected orange/red, got {result['level']} (score {result['score']})"
+    assert any("epilepsy" in r.lower() or "seizure" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected epilepsy compound rule, got: {result['triggered_rules']}"
+
+
+def test_coagulopathy_construction_compound():
+    """Coagulopathy + construction hazard should trigger hemorrhage risk rule."""
+    result = run_engine({
+        "scenario_tags": ["workplace_or_site_visit"],
+        "vulnerability_tags": ["coagulopathy"],
+        "exposure_tags": ["construction_hazard"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert any("coagulopathy" in r.lower() or "hemorrhage" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected coagulopathy compound rule, got: {result['triggered_rules']}"
+
+
+def test_emf_implant_radiation_compound():
+    """EMF-sensitive/implant + radiation should trigger device malfunction rule."""
+    result = run_engine({
+        "scenario_tags": ["workplace_or_site_visit"],
+        "vulnerability_tags": ["emf_sensitive_or_implant"],
+        "exposure_tags": ["radiation"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert any("implant" in r.lower() or "emf" in r.lower() or "malfunction" in r.lower()
+               for r in result["triggered_rules"]), \
+        f"Expected EMF/implant compound rule, got: {result['triggered_rules']}"
+
+
+def test_early_pregnancy_radiation_compound():
+    """Early pregnancy + radiation should trigger highest teratogenic risk rule (bonus 9)."""
+    result = run_engine({
+        "scenario_tags": ["health_sensitive_activity"],
+        "vulnerability_tags": ["early_pregnancy"],
+        "exposure_tags": ["radiation"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["level"] == "red", f"Expected red for early pregnancy + radiation, got {result['level']} (score {result['score']})"
+    assert any("teratogenic" in r.lower() or "early pregnancy" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected early pregnancy teratogenic rule, got: {result['triggered_rules']}"
+
+
+def test_trying_to_conceive_chemical_compound():
+    """Trying to conceive + chemical should trigger reproductive toxicity rule."""
+    result = run_engine({
+        "scenario_tags": ["workplace_or_site_visit"],
+        "vulnerability_tags": ["trying_to_conceive"],
+        "exposure_tags": ["chemical"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert any("conceive" in r.lower() or "reproductive" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected trying-to-conceive compound rule, got: {result['triggered_rules']}"
+
+
+def test_breastfeeding_chemical_compound():
+    """Breastfeeding + chemical should trigger infant exposure via milk rule."""
+    result = run_engine({
+        "scenario_tags": ["health_sensitive_activity"],
+        "vulnerability_tags": ["breastfeeding"],
+        "exposure_tags": ["chemical"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert any("breastfeeding" in r.lower() or "milk" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected breastfeeding compound rule, got: {result['triggered_rules']}"
+
+
+def test_menstruation_exertion_compound():
+    """Menstruation + extreme exertion should trigger anemia/clotting rule."""
+    result = run_engine({
+        "scenario_tags": ["sports_and_fitness_activity"],
+        "vulnerability_tags": ["menstruation"],
+        "exposure_tags": ["extreme_exertion"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert any("menstruation" in r.lower() or "anemia" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected menstruation compound rule, got: {result['triggered_rules']}"
+
+
+def test_possible_pregnancy_chemical_compound():
+    """Possible pregnancy + chemical should trigger teratogenic rule."""
+    result = run_engine({
+        "scenario_tags": ["workplace_or_site_visit"],
+        "vulnerability_tags": ["possible_pregnancy"],
+        "exposure_tags": ["chemical"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert result["level"] in ("orange", "red"), f"Expected orange/red, got {result['level']} (score {result['score']})"
+    assert any("pregnancy" in r.lower() or "teratogenic" in r.lower() for r in result["triggered_rules"]), \
+        f"Expected pregnancy+chemical compound rule, got: {result['triggered_rules']}"
+
+
+def test_photosensitivity_altitude_compound():
+    """Photosensitivity + altitude should trigger UV flare rule."""
+    result = run_engine({
+        "scenario_tags": ["outdoor_or_environmental_exposure"],
+        "vulnerability_tags": ["photosensitivity"],
+        "exposure_tags": ["altitude"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    })
+    assert any("photosensitivity" in r.lower() or "uv" in r.lower() or "flare" in r.lower()
+               for r in result["triggered_rules"]), \
+        f"Expected photosensitivity compound rule, got: {result['triggered_rules']}"
+
+
+def test_special_constitution_weights():
+    """Special constitution tags should have appropriate weights."""
+    base = {
+        "scenario_tags": ["health_sensitive_activity"],
+        "vulnerability_tags": [],
+        "exposure_tags": ["chemical"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    }
+    with_g6pd = {**base, "vulnerability_tags": ["g6pd_deficiency"]}
+    with_normal = {**base, "vulnerability_tags": ["chronic_illness"]}
+    score_g6pd = run_engine(with_g6pd)["score"]
+    score_normal = run_engine(with_normal)["score"]
+    # G6PD (weight 5) + compound bonus should score higher than chronic_illness (weight 3)
+    assert score_g6pd > score_normal, \
+        f"G6PD case ({score_g6pd}) should score higher than chronic_illness ({score_normal})"
+
+
+def test_early_pregnancy_highest_vulnerability_weight():
+    """Early pregnancy (weight 7) should be the highest vulnerability weight."""
+    base = {
+        "scenario_tags": [],
+        "vulnerability_tags": [],
+        "exposure_tags": [],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    }
+    early_preg = run_engine({**base, "vulnerability_tags": ["early_pregnancy"]})["score"]
+    normal_preg = run_engine({**base, "vulnerability_tags": ["pregnancy"]})["score"]
+    assert early_preg > normal_preg, \
+        f"Early pregnancy ({early_preg}) should score higher than normal pregnancy ({normal_preg})"
+
+
+def test_reproductive_stages_increase_risk():
+    """Reproductive stage tags should compound with exposure tags."""
+    base = {
+        "scenario_tags": ["health_sensitive_activity"],
+        "vulnerability_tags": [],
+        "exposure_tags": ["chemical"],
+        "counterparty_tags": [],
+        "safeguard_tags": [],
+        "constraint_tags": [],
+    }
+    score_base = run_engine(base)["score"]
+    for tag in ["early_pregnancy", "trying_to_conceive", "breastfeeding", "menstruation"]:
+        score_with = run_engine({**base, "vulnerability_tags": [tag]})["score"]
+        assert score_with > score_base, \
+            f"Adding {tag} ({score_with}) should increase score above base ({score_base})"
+
+
 if __name__ == "__main__":
     tests = [
         # Original tests
@@ -789,8 +1078,19 @@ if __name__ == "__main__":
         test_extreme_exertion_compound, test_formaldehyde_pregnancy_compound,
         test_construction_ppe_absence, test_new_safeguards_reduce_score,
         test_new_scenario_tags_weight,
-    ]
-    for t in tests:
-        t()
-        print(f"✓ {t.__name__}")
-    print(f"\nAll {len(tests)} tests passed!")
+        # v3.0 special constitution & reproductive stage tests
+        test_g6pd_chemical_compound, test_g6pd_formaldehyde_compound,
+    test_thyroid_radiation_compound, test_asthma_dust_compound,
+    test_asthma_formaldehyde_compound, test_immunosuppressed_infectious_compound,
+    test_severe_allergy_exertion_compound, test_epilepsy_deep_water_compound,
+    test_coagulopathy_construction_compound, test_emf_implant_radiation_compound,
+    test_early_pregnancy_radiation_compound, test_trying_to_conceive_chemical_compound,
+    test_breastfeeding_chemical_compound, test_menstruation_exertion_compound,
+    test_possible_pregnancy_chemical_compound, test_photosensitivity_altitude_compound,
+    test_special_constitution_weights, test_early_pregnancy_highest_vulnerability_weight,
+    test_reproductive_stages_increase_risk,
+]
+for t in tests:
+    t()
+    print(f"✓ {t.__name__}")
+print(f"\nAll {len(tests)} tests passed!")

@@ -9,6 +9,10 @@ If the answer can be found by searching, do that instead of asking the user.
 1. What exactly are you planning to do, where, and for how long?
 2. Will you be alone, and can you leave independently at any point?
 3. Do you have any health, pregnancy, recovery, fatigue, or medication factors that make this less routine for you?
+4. Do you have any special health conditions — G6PD deficiency, thyroid disease, asthma, immunosuppression, metal allergy, severe allergy, photosensitivity, coagulopathy, epilepsy, or implanted medical devices — that could interact with the environment you're going into?
+5. For anyone who could be pregnant, trying to conceive, or breastfeeding: have you confirmed this won't be an issue? Radiation, chemical teratogens, and certain medications affect early pregnancy before most people know they're pregnant. Male reproductive toxicity (lead, solvents, radiation) also matters during conception planning.
+6. Are you taking any medications that interact with this environment? Common interactions: blood thinners + trauma risk, steroids + infection risk, immunosuppressants + biohazard, photosensitizing drugs + UV, sedatives + driving/heights, beta-blockers + altitude/exertion.
+7. Is anyone in your group a child, elderly person, or someone with reduced mobility/senses? Age changes tolerance for heat, cold, altitude, exertion, and medication dosing.
 
 ## Travel and mobility
 - What time of day is the travel, and what is your fallback if the first plan fails?
@@ -31,11 +35,13 @@ If the answer can be found by searching, do that instead of asking the user.
 - What PPE or safety controls are confirmed, not assumed?
 - How much walking, standing, lifting, or ladder use is expected?
 - If you needed to stop immediately, could you do that without pressure?
+- Do you have any conditions that amplify these hazards — asthma (dust/fumes), thyroid disease (radiation), immunosuppression (biohazard), metal allergy (industrial chemicals), pregnancy (solvents/heavy metals)?
 
 ## Pregnancy or health-sensitive activity
 - Could you be pregnant, recently pregnant, post-op, or managing a condition that changes your tolerance?
-- Are there chemicals, infection exposure, heavy exertion, heat, dehydration, or long standing involved?
+- Are there chemicals, infection exposure, heavy exertion, heat, dehydration, radiation, or long standing involved?
 - Do you have recent symptoms or a clinician's restriction that makes this non-routine?
+- Do you have any special constitution — G6PD deficiency, thyroid disease, immunosuppression, severe allergy, photosensitivity, coagulopathy — that could interact with the planned activity or environment?
 
 ## Stranger meeting or date
 - How well is the person verified beyond chat?

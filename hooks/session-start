@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 # Risk Guard session start hook
-echo "☀️ Risk Guard loaded. I'll flag safety risks when I spot them — just tell me your plans."
+echo "☀️ Risk Guard loaded. I'll flag safety risks when I spot them — just tell me your plans. If you have any health conditions (asthma, G6PD deficiency, thyroid disease, allergies, pregnancy, etc.), mention them so I can check for environment interactions."
